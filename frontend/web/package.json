@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@iconify-json/mdi": "^1.2.3",
     "@nuxt/eslint": "^1.0.1",
     "@nuxt/fonts": "^0.10.3",
     "@nuxt/icon": "^1.10.3",
@@ -17,16 +18,17 @@
     "@primevue/nuxt-module": "^4.2.5",
     "@primevue/themes": "^4.2.5",
     "@stylistic/eslint-plugin": "^3.1.0",
+    "@vueuse/core": "^12.5.0",
+    "@vueuse/nuxt": "^12.5.0",
     "nuxt": "^3.15.4",
     "primevue": "^4.2.5",
     "sass-embedded": "^1.83.4",
     "tailwindcss": "^3.4.17",
     "tailwindcss-primeui": "^0.4.0",
+    "typescript": "^5.7.3",
     "v-wave": "^3.0.2",
     "vue": "latest",
     "vue-router": "latest",
-    "@iconify-json/mdi": "^1.2.3",
-    "typescript": "^5.7.3",
     "vue-tsc": "^2.2.0"
   },
   "packageManager": "pnpm@9.15.5+sha512.845196026aab1cc3f098a0474b64dfbab2afe7a1b4e91dd86895d8e4aa32a7a6d03049e2d0ad770bbe4de023a7122fb68c1a1d6e0d033c7076085f9d5d4800d4"
