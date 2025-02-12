@@ -17,6 +17,10 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
   ],
 
+  tailwindcss: {
+    exposeConfig: true,
+  },
+
   watch: [
     'primevue/presets/default.ts',
   ],
