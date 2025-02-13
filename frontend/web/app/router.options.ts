@@ -5,13 +5,14 @@ import type { LocationQuery } from 'vue-router';
 export default {
   parseQuery: (query) => parse(query, {
     arrayLimit: 100,
+    comma: true,
     parameterLimit: 100,
     duplicates: 'combine',
   }) as LocationQuery,
   stringifyQuery: (query) => stringify(query, {
-    addQueryPrefix: false,
     skipNulls: true,
     allowEmptyArrays: false,
     arrayFormat: 'comma',
+    commaRoundTrip: true,
   }),
 } satisfies RouterConfig;
