@@ -1,0 +1,12 @@
+.paginator {
+  &--disabled {
+    .p-paginator-content {
+      opacity: .5;
+      cursor: not-allowed;
+
+      button {
+        pointer-events: none;
+      }
+    }
+  }
+}
