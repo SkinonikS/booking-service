@@ -15,10 +15,52 @@ export default defineNuxtConfig({
     '@primevue/nuxt-module',
     'v-wave/nuxt',
     '@vueuse/nuxt',
+    'nuxt-security',
+    'nuxt-oidc-auth',
   ],
+
+  oidc: {
+    middleware: {
+      globalMiddlewareEnabled: false,
+    },
+    // session: {
+    //   expirationCheck: false,
+    // },
+    providers: {
+      cognito: {
+        clientId: '',
+        clientSecret: '',
+        redirectUri: 'http://localhost:3000/auth/cognito/callback',
+        scope: ['openid', 'email', 'profile'],
+        logoutRedirectUri: 'http://localhost:3000/',
+        baseUrl: '',
+        prompt: ['consent login select_account'],
+        responseMode: 'query',
+        exposeIdToken: true,
+        exposeAccessToken: true,
+      },
+    },
+  },
 
   tailwindcss: {
     exposeConfig: true,
+  },
+
+  security: {
+    headers: {
+      contentSecurityPolicy: {
+        'img-src': ['https://placehold.co/', 'self'], // TODO: temporary
+      },
+    },
+    csrf: {
+      enabled: true,
+      addCsrfTokenToEventCtx: true,
+      cookieKey: 'CSRF-TOKEN',
+      headerName: 'X-CSRF-TOKEN',
+      cookie: {
+        sameSite: 'lax',
+      },
+    },
   },
 
   watch: [
