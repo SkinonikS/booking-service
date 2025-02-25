@@ -1,37 +1,15 @@
-import Aura from '@primevue/themes/aura';
-import { definePreset } from '@primevue/themes';
+import Aura from '@primeuix/themes/aura';
+import { definePreset } from '@primeuix/themes';
 
 export default definePreset(Aura, {
   components: {
-    dataview: {
-      border: {
-        radius: '0.25rem',
-        width: '1px',
-      },
-      colorScheme: {
-        light: {
-          border: {
-            color: 'var(--p-surface-200)',
-          },
-          content: {
-            color: '#000',
-          },
-        },
-        dark: {
-          border: {
-            color: 'var(--p-surface-700)',
-          },
-          content: {
-            color: '#fff',
-          },
-        },
-      },
-    },
     button: {
       colorScheme: {
         dark: {
-          primary: {
-            color: '#fff',
+          root: {
+            primary: {
+              color: '#fff',
+            },
           },
         },
       },
