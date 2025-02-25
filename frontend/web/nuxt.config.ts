@@ -1,4 +1,5 @@
 import Default from './primevue/presets/default';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -11,13 +12,34 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/icon',
     '@nuxt/fonts',
-    '@nuxtjs/tailwindcss',
     '@primevue/nuxt-module',
     'v-wave/nuxt',
     '@vueuse/nuxt',
     'nuxt-security',
     'nuxt-oidc-auth',
   ],
+
+  fonts: {
+    experimental: {
+      processCSSVariables: true,
+    },
+  },
+
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
+
+  nitro: {
+    preset: 'node-server',
+    storage: {
+      oidc: {
+        driver: 'fs',
+        base: 'oidcstorage',
+      },
+    },
+  },
 
   oidc: {
     middleware: {
@@ -49,7 +71,7 @@ export default defineNuxtConfig({
   security: {
     headers: {
       contentSecurityPolicy: {
-        'img-src': ['https://placehold.co/', 'self'], // TODO: temporary
+        'img-src': ['https://placehold.co/', 'https://cdn.dummyjson.com', 'self'], // TODO: temporary
       },
     },
     csrf: {
@@ -72,6 +94,7 @@ export default defineNuxtConfig({
   },
 
   css: [
+    '~/assets/css/tailwind.css',
     '~/assets/scss/main.scss',
   ],
 
@@ -82,7 +105,7 @@ export default defineNuxtConfig({
         options: {
           cssLayer: {
             name: 'primevue',
-            order: 'tailwind-base, primevue, tailwind-utilities',
+            order: 'theme, base, primevue',
           },
         },
       },
