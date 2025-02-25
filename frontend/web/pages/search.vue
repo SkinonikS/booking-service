@@ -89,6 +89,8 @@ const applyFilters = () => {
   refresh();
 };
 
+const loadingIndicator = useLoadingIndicator();
+
 const options = ref([
   {
     label: 'String',
@@ -116,11 +118,18 @@ const { refresh, status, data: bookings } = await useAsyncData('bookings', () =>
     skip: paginator.offset.value,
     'categories[]': searchParams.value.categories,
   },
+  onResponse: () => {
+    loadingIndicator.finish();
+  },
 }), {
   watch: [
     searchParams,
     paginator.offset,
   ],
+});
+
+watch(paginator.offset, () => {
+  loadingIndicator.start();
 });
 
 onMounted(() => {
