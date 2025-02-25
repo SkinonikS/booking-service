@@ -32,11 +32,15 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'node-server',
     storage: {
       oidc: {
+        driver: 'redis',
+      },
+    },
+    devStorage: {
+      oidc: {
         driver: 'fs',
-        base: 'oidcstorage',
+        base: './.cache/oidc',
       },
     },
   },
@@ -45,27 +49,18 @@ export default defineNuxtConfig({
     middleware: {
       globalMiddlewareEnabled: false,
     },
-    // session: {
-    //   expirationCheck: false,
-    // },
     providers: {
       cognito: {
         clientId: '',
         clientSecret: '',
-        redirectUri: 'http://localhost:3000/auth/cognito/callback',
+        redirectUri: '',
         scope: ['openid', 'email', 'profile'],
-        logoutRedirectUri: 'http://localhost:3000/',
+        logoutRedirectUri: '',
         baseUrl: '',
-        prompt: ['consent login select_account'],
-        responseMode: 'query',
         exposeIdToken: true,
         exposeAccessToken: true,
       },
     },
-  },
-
-  tailwindcss: {
-    exposeConfig: true,
   },
 
   security: {
@@ -81,6 +76,17 @@ export default defineNuxtConfig({
       headerName: 'X-CSRF-TOKEN',
       cookie: {
         sameSite: 'lax',
+      },
+    },
+  },
+
+  runtimeConfig: {
+    oidc_storage: {
+      redis: {
+        host: 'localhost',
+        port: 6379,
+        password: '',
+        db: 0,
       },
     },
   },
