@@ -45,7 +45,7 @@
             <CustomImg
               src="https://placehold.co/300x200"
               width="100%"
-              height="200"
+              height="200px"
               object-fit="cover"
             />
           </template>
