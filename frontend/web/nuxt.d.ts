@@ -9,6 +9,10 @@ declare module 'nuxt/schema' {
       };
     };
   }
+
+  interface AppConfigInput {
+    appName: string;
+  }
 }
 
 export { };
