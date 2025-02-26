@@ -95,14 +95,11 @@
             </ul>
           </div>
         </div>
-        <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-600 text-center">
-          <p>&copy; 2023 BookingService. All rights reserved.</p>
+        <div class="flex items-center justify-between mt-8 pt-8 border-t border-gray-200 dark:border-gray-600 text-center">
+          <span>&copy; 2023 BookingService. All rights reserved.</span>
+          <LocaleSwitcher />
         </div>
       </div>
     </footer>
   </div>
 </template>
-
-<script setup lang="ts">
-
-</script>

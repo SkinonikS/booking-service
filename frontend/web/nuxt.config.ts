@@ -17,11 +17,38 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-security',
     'nuxt-oidc-auth',
+    '@nuxtjs/i18n',
   ],
 
   fonts: {
     experimental: {
       processCSSVariables: true,
+    },
+  },
+
+  i18n: {
+    strategy: 'prefix',
+    defaultLocale: 'en',
+    lazy: true,
+    locales: [
+      {
+        code: 'en',
+        name: 'English',
+        file: 'en.ts',
+      },
+      {
+        code: 'ru',
+        name: 'Русский',
+        file: 'ru.ts',
+      },
+    ],
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_locale',
+      redirectOn: 'root',
+    },
+    experimental: {
+      localeDetector: 'localeDetector.ts',
     },
   },
 

@@ -20,15 +20,15 @@
           </div>
           <ul class="overflow-hidden hidden">
             <li>
-              <NuxtLink v-wave active-class="bg-primary/10" class="flex items-center gap-4 cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors" to="/profile" @click="emit('click')">
+              <NuxtLinkLocale v-wave active-class="bg-primary/10" class="flex items-center gap-4 cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors" to="/profile" @click="emit('click')">
                 <Icon name="mdi:account-edit" size="1.5rem" />
-                <span class="font-medium">Profile</span>
-              </NuxtLink>
+                <span class="font-medium">{{ $t('navigation.profile') }}</span>
+              </NuxtLinkLocale>
             </li>
             <li>
               <a v-wave class="flex items-center gap-4 cursor-pointer p-4 rounded text-red-700 hover:bg-surface-100 dark:hover:bg-surface-800 duration-150 transition-colors" @click="logout">
                 <Icon name="mdi:logout" size="1.5rem" />
-                <span class="font-medium">Logout</span>
+                <span class="font-medium">{{ $t('navigation.logout') }}</span>
               </a>
             </li>
           </ul>

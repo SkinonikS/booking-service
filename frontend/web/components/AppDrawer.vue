@@ -7,10 +7,10 @@
       <div class="overflow-y-auto">
         <ul class="overflow-hidden">
           <li v-for="link in links">
-            <NuxtLink v-wave :to="link.to" active-class="bg-primary/10" class="flex items-center gap-4 cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors" @click="closeDrawer">
+            <NuxtLinkLocale v-wave :to="link.to" active-class="bg-primary/10" class="flex items-center gap-4 cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors" @click="closeDrawer">
               <Icon :name="link.icon" size="1.5rem" />
-              <span class="font-medium">{{ link.label }}</span>
-            </NuxtLink>
+              <span class="font-medium">{{ $t(link.label) }}</span>
+            </NuxtLinkLocale>
           </li>
         </ul>
       </div>
@@ -23,18 +23,19 @@
 </template>
 
 <script setup lang="ts">
-const isVisible = ref(false);
 const bp = useAppBreakpoints();
 const greaterOrEqualMd = bp.greaterOrEqual('md');
 
+const isVisible = ref(false);
+
 const links = computed(() => [
   {
-    label: 'Homepage',
+    label: 'navigation.homepage',
     icon: 'mdi:house',
     to: { name: 'index' },
   },
   {
-    label: 'Advanced Search',
+    label: 'navigation.advancedSearch',
     icon: 'mdi:magnify',
     to: { name: 'search' },
   },
