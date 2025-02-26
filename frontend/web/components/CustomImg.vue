@@ -10,7 +10,7 @@
           </slot>
         </template>
         <template v-else-if="state === 'error'">
-          <slot name="error">
+          <slot name="error" :retry="() => (state = 'pending')">
             <div class="flex flex-col gap-4 items-center justify-center h-full">
               <span class="text-sm">Failed to load image</span>
               <Button outlined size="small" label="Retry" @click="state = 'pending'">
