@@ -5,12 +5,7 @@
         <NuxtLink href="/" class="text-2xl font-bold text-primary">
           YourNameHere
         </NuxtLink>
-        <div class="hidden md:flex items-center space-x-4">
-          <Button v-wave>Sign In</Button>
-        </div>
-      <!-- <Button variant="ghost" size="icon" class="md:hidden">
-        <Menu class="h-6 w-6" />
-      </Button> -->
+        <AppDrawer />
       </div>
     </header>
     <main class="grow">
@@ -107,3 +102,7 @@
     </footer>
   </div>
 </template>
+
+<script setup lang="ts">
+
+</script>
