@@ -42,10 +42,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card v-for="i in 4" :dt="{ body: { gap: '1rem' } }" class="overflow-hidden">
           <template #header>
-            <Image
+            <CustomImg
               src="https://placehold.co/300x200"
               width="100%"
               height="200"
+              object-fit="cover"
             />
           </template>
           <template #content>

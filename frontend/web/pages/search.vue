@@ -48,7 +48,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
             <Card v-for="item in bookings.products" :pt="{ body: { class: 'h-full' }, content: { class: 'h-full' } }" class="overflow-hidden">
               <template #header>
-                <Image image-class="object-cover" :src="item.thumbnail" />
+                <CustomImg height="300px" :src="item.thumbnail" />
               </template>
               <template #title>
                 <h2 v-tooltip.top="item.title" class="text-xl font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{{ item.title }}</h2>
