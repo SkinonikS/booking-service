@@ -2,7 +2,7 @@
   <Button v-wave text @click="openDrawer">
     <Icon name="mdi:menu" class="h-6 w-6" />
   </Button>
-  <Drawer v-model:visible="isVisible" header="YourNameHere" :position="position">
+  <Drawer v-model:visible="isVisible" :header="appConfig.appName" :position="position">
     <div class="flex flex-col">
       <div class="overflow-y-auto">
         <ul class="overflow-hidden">
@@ -25,6 +25,8 @@
 <script setup lang="ts">
 const bp = useAppBreakpoints();
 const greaterOrEqualMd = bp.greaterOrEqual('md');
+
+const appConfig = useAppConfig();
 
 const isVisible = ref(false);
 

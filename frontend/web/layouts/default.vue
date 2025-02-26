@@ -3,7 +3,7 @@
     <header>
       <div class="container mx-auto p-4 flex items-center justify-between">
         <NuxtLink href="/" class="text-2xl font-bold text-primary">
-          YourNameHere
+          {{ appConfig.appName }}
         </NuxtLink>
         <AppDrawer />
       </div>
@@ -103,3 +103,7 @@
     </footer>
   </div>
 </template>
+
+<script setup lang="ts">
+const appConfig = useAppConfig();
+</script>
