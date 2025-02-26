@@ -44,6 +44,9 @@ importers:
       '@types/qs':
         specifier: ^6.9.18
         version: 6.9.18
+      '@vueuse/components':
+        specifier: ^12.7.0
+        version: 12.7.0(typescript@5.7.3)
       '@vueuse/core':
         specifier: ^12.7.0
         version: 12.7.0(typescript@5.7.3)
@@ -1588,6 +1591,9 @@ packages:
 
   '@vue/shared@3.5.13':
     resolution: {integrity: sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==}
+
+  '@vueuse/components@12.7.0':
+    resolution: {integrity: sha512-LbaKPOx9sTPRxI8ymJt3VCm2CifmC432yaXxCGbjkuKIh2jyNlXvE7sGrLm7kbC7WkBJnUXzm3K/cI1pIE8ueQ==}
 
   '@vueuse/core@12.7.0':
     resolution: {integrity: sha512-jtK5B7YjZXmkGNHjviyGO4s3ZtEhbzSgrbX+s5o+Lr8i2nYqNyHuPVOeTdM1/hZ5Tkxg/KktAuAVDDiHMraMVA==}
@@ -7142,6 +7148,14 @@ snapshots:
       vue: 3.5.13(typescript@5.7.3)
 
   '@vue/shared@3.5.13': {}
+
+  '@vueuse/components@12.7.0(typescript@5.7.3)':
+    dependencies:
+      '@vueuse/core': 12.7.0(typescript@5.7.3)
+      '@vueuse/shared': 12.7.0(typescript@5.7.3)
+      vue: 3.5.13(typescript@5.7.3)
+    transitivePeerDependencies:
+      - typescript
 
   '@vueuse/core@12.7.0(typescript@5.7.3)':
     dependencies:
