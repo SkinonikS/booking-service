@@ -1,7 +1,7 @@
 <template>
   <template v-if="auth.loggedIn.value">
     <div class="overflow-y-auto">
-      <ul class="list-none m-0">
+      <ul>
         <li>
           <div
             v-wave
@@ -12,13 +12,13 @@
               leaveToClass: 'hidden',
               leaveActiveClass: 'animate-slideup'
             }"
-            class="p-4 gap-4 flex items-center text-surface-500 dark:text-surface-400 cursor-pointer p-ripple"
+            class="p-4 gap-4 flex items-center text-surface-500 dark:text-surface-400 cursor-pointer rounded"
           >
             <Icon name="mdi:account" size="1.5rem" />
             <span class="font-medium flex-grow">{{ userName }}</span>
             <Icon name="mdi:chevron-down" size="1.5rem" />
           </div>
-          <ul class="list-none p-0 m-0 overflow-hidden hidden">
+          <ul class="overflow-hidden hidden">
             <li>
               <NuxtLink v-wave active-class="bg-primary/10" class="flex items-center gap-4 cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors" to="/profile" @click="emit('click')">
                 <Icon name="mdi:account-edit" size="1.5rem" />
