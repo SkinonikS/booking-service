@@ -45,7 +45,7 @@
       <div class="w-full">
         <div class="flex flex-col gap-6">
           <Paginator v-model:first="paginator.offset.value" :class="paginatorClasses" :total-records="paginator.total.value" :rows="paginator.perPage.value" always-show />
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+          <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
             <Card v-for="item in bookings.products" :pt="{ body: { class: 'h-full' }, content: { class: 'h-full' } }" class="overflow-hidden">
               <template #header>
                 <CustomImg height="300px" :src="item.thumbnail" />
