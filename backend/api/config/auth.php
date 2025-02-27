@@ -40,6 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'cognito' => [
+            'driver' => 'cognito',
+            'client_id' => env('AUTH_COGNITO_CLIENT_ID'),
+            'base_url' => env('AUTH_COGNITO_BASE_URL'),
+            'user_pool_url' => env('AUTH_COGNITO_POOL_URL'),
+        ],
     ],
 
     /*
