@@ -50,10 +50,10 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: composer install --optimize-autoloader --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       
       - name: Run tests
-        run: vendor/bin/pest --ci
+        run: ./vendor/bin/pest --ci
 
   build:
     runs-on: ubuntu-latest
