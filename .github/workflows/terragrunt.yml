@@ -1,12 +1,7 @@
 name: Terragrunt
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
+  workflow_dispatch: {}
   push:
     branches:
       - main
@@ -30,7 +25,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: 'terragrunt/environments/${{ vars.TF_ENV_NAME }}'
+        working-directory: terragrunt/environments/production
 
     steps:
       - name: Checkout repository
@@ -41,7 +36,7 @@ jobs:
         with:
           tf_version: ${{ env.TF_VERSION }}
           tg_version: ${{ env.TG_VERSION }}
-          tg_command: 'hclfmt --terragrunt-check --terragrunt-diff --non-interactive'
+          tg_command: hclfmt --terragrunt-check --terragrunt-diff --non-interactive
 
   plan:
     runs-on: ubuntu-latest
@@ -49,7 +44,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: 'terragrunt/environments/production'
+        working-directory: terragrunt/environments/production
 
     needs: [checks]
     steps:
@@ -61,7 +56,7 @@ jobs:
         with:
           tf_version: ${{ env.TF_VERSION }}
           tg_version: ${{ env.TG_VERSION }}
-          tg_command: 'run-all plan --non-interactive'
+          tg_command: run-all plan --non-interactive
 
   apply:
     runs-on: ubuntu-latest
@@ -69,7 +64,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: 'terragrunt/environments/production'
+        working-directory: terragrunt/environments/production
 
     needs: [plan]
     steps:
@@ -81,4 +76,4 @@ jobs:
         with:
           tf_version: ${{ env.TF_VERSION }}
           tg_version: ${{ env.TG_VERSION }}
-          tg_command: 'run-all apply --non-interactive -auto-approve'
+          tg_command: run-all apply --non-interactive -auto-approve

@@ -1,12 +1,7 @@
 name: Backend API
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
+  workflow_dispatch: {}
   push:
     branches:
       - main
@@ -112,5 +107,5 @@ jobs:
       - name: Update version EB version label
         run: |
           aws elasticbeanstalk update-environment \
-            --environment-name ${{ env.EB_ENV_NAME }} \
+            --environment-name ${{ vars.EB_ENV_NAME }} \
             --version-label ${{ steps.create-app-version.outputs.version }}

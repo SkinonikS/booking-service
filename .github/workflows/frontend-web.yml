@@ -1,12 +1,7 @@
 name: Frontend Web
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
+  workflow_dispatch: {}
   push:
     branches:
       - main
@@ -41,7 +36,7 @@ jobs:
       - name: Start job
         run: |
             aws amplify start-job \
-            --app-id ${{ env.AMPLIFY_APP_ID }} \
-            --branch-name ${{ env.AMPLIFY_BRANCH_NAME }} \
+            --app-id ${{ vars.AMPLIFY_APP_ID }} \
+            --branch-name ${{ vars.AMPLIFY_BRANCH_NAME }} \
             --commit-id ${{ github.sha }} \
             --job-type RELEASE
