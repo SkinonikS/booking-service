@@ -1,0 +1,39 @@
+variable "google_client_id" {
+  description = "Google OAuth2 client ID"
+  type        = string
+}
+
+variable "google_client_secret" {
+  description = "Google OAuth2 client secret"
+  type        = string
+}
+
+variable "client_callback_urls" {
+  description = "The callback URLs for the web client"
+  type        = list(string)
+  default     = []
+}
+
+variable "client_logout_urls" {
+  description = "The callback URLs for the web client"
+  type        = list(string)
+  default     = []
+}
+
+variable "client_name" {
+  description = "The name of the OAuth2 client"
+  type        = string
+  default     = "cognito-oauth2-client"
+}
+
+variable "environment" {
+  description = "The environment name"
+  type        = string
+  default     = "dev"
+}
+
+variable "user_pool_name" {
+  description = "The name of the user pool"
+  type        = string
+  default     = "cognito-user-pool"
+}
