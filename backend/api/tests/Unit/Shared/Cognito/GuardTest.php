@@ -137,7 +137,7 @@ it('returns the existing user when found', function () {
     $accessTokenValidator->shouldReceive('validate')
         ->once()
         ->with($bearerToken, Mockery::type(JWKSet::class))
-        ->andReturn(new AccessToken('foo'));
+        ->andReturn(new AccessToken('foo', 'bar'));
 
     /**
      * @var \Mockery\MockInterface&\App\Shared\Cognito\UserProviders\UserProviderInterface
@@ -146,7 +146,7 @@ it('returns the existing user when found', function () {
     $userProvider->shouldNotReceive('create');
     $userProvider->shouldReceive('retrieveByCognitoId')
         ->once()
-        ->with('foo')
+        ->with('bar')
         ->andReturnUsing(function () {
             /**
              * @var \Mockery\MockInterface&\Illuminate\Contracts\Auth\Authenticatable
@@ -203,7 +203,7 @@ it('creates a new user when none is found', function () {
     $accessTokenValidator->shouldReceive('validate')
         ->once()
         ->with($bearerToken, Mockery::type(JWKSet::class))
-        ->andReturn(new AccessToken('foo'));
+        ->andReturn(new AccessToken('foo', 'bar'));
 
     /**
      * @var \Mockery\MockInterface&\App\Shared\Cognito\UserProviders\UserProviderInterface
@@ -212,7 +212,7 @@ it('creates a new user when none is found', function () {
     $userProvider->shouldReceive('create')
         ->once()
         ->with([
-            'cognito_id' => 'foo',
+            'cognito_id' => 'bar',
             'email' => 'Foo Bar',
             'name' => 'foo@bar',
         ])
@@ -229,7 +229,7 @@ it('creates a new user when none is found', function () {
         });
     $userProvider->shouldReceive('retrieveByCognitoId')
         ->once()
-        ->with('foo')
+        ->with('bar')
         ->andReturnNull();
 
     $guard = new Guard(

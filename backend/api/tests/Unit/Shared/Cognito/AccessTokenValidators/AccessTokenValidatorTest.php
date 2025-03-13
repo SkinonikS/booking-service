@@ -314,6 +314,8 @@ it('returns an AccessToken instance when validation succeeds', function () {
     $payload = [
         'sub' => 'user123',
         'iss' => 'issuer',
+        'aud' => 'client-id',
+        'cognito:username' => 'user123',
         'exp' => time() + 3600,
         'iat' => time(),
         'jti' => 'token-id'
