@@ -20,6 +20,7 @@ env:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    environment: production
 
     defaults:
       run:
@@ -38,10 +39,11 @@ jobs:
 
   plan:
     runs-on: ubuntu-latest
+    environment: production
 
     defaults:
       run:
-        working-directory: 'terragrunt/environments/${{ vars.TF_ENV_NAME }}'
+        working-directory: 'terragrunt/environments/production'
 
     needs: [checks]
     steps:
@@ -57,10 +59,11 @@ jobs:
 
   apply:
     runs-on: ubuntu-latest
-
+    environment: production
+    
     defaults:
       run:
-        working-directory: 'terragrunt/environments/${{ vars.TF_ENV_NAME }}'
+        working-directory: 'terragrunt/environments/production'
 
     needs: [plan]
     steps:
