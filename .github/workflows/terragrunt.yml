@@ -1,0 +1,75 @@
+name: Terragrunt
+
+on:
+  push:
+    branches:
+      - main
+    paths: 
+      - terragrunt/**
+  pull_request:
+    branches:
+      - main
+    paths: 
+      - terragrunt/**
+
+env:
+  TF_VERSION: '1.11.2'
+  TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+  TG_VERSION: '0.75.8'
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: 'terragrunt/environments/${{ vars.TF_ENV_NAME }}'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check terragrunt HCL
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          tf_version: ${{ env.TF_VERSION }}
+          tg_version: ${{ env.TG_VERSION }}
+          tg_command: 'hclfmt --terragrunt-check --terragrunt-diff --non-interactive'
+
+  plan:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: 'terragrunt/environments/${{ vars.TF_ENV_NAME }}'
+
+    needs: [checks]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Plan
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          tf_version: ${{ env.TF_VERSION }}
+          tg_version: ${{ env.TG_VERSION }}
+          tg_command: 'run-all plan --non-interactive'
+
+  apply:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: 'terragrunt/environments/${{ vars.TF_ENV_NAME }}'
+
+    needs: [plan]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Apply
+        uses: gruntwork-io/terragrunt-action@v2
+        with:
+          tf_version: ${{ env.TF_VERSION }}
+          tg_version: ${{ env.TG_VERSION }}
+          tg_command: 'run-all apply --non-interactive -auto-approve'
