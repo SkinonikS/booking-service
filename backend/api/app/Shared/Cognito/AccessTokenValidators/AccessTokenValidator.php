@@ -61,11 +61,11 @@ class AccessTokenValidator implements AccessTokenValidatorInterface
         $payload = json_decode($jws->getPayload() ?? '', true) ?? [];
 
         try {
-            $this->claimChecker->check($payload, ['iss', 'sub', 'exp', 'iat', 'jti']);
+            $this->claimChecker->check($payload, ['iss', 'sub', 'aud', 'exp', 'iat', 'jti']);
         } catch (InvalidClaimException|MissingMandatoryClaimException $e) {
             return false;
         }
 
-        return new AccessToken($payload['sub']);
+        return new AccessToken($payload['sub'], $payload['cognito:username']);
     }
 }

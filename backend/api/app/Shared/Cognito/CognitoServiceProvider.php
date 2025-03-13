@@ -12,6 +12,7 @@ use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Client\Factory as HttpClientFactory;
 use Illuminate\Support\ServiceProvider;
 use Jose\Component\Checker\AlgorithmChecker;
+use Jose\Component\Checker\AudienceChecker;
 use Jose\Component\Checker\ClaimCheckerManager;
 use Jose\Component\Checker\ExpirationTimeChecker;
 use Jose\Component\Checker\HeaderCheckerManager;
@@ -54,7 +55,8 @@ class CognitoServiceProvider extends ServiceProvider
                     new ExpirationTimeChecker($now, 10),
                     new IssuedAtChecker($now, 10),
                     new IssuerChecker([$config['base_url']]),
-                    new IsEqualChecker('client_id', $config['client_id']),
+                    new AudienceChecker($config['client_id']),
+                    new IsEqualChecker('token_use', 'id'),
                 ]),
                 new AlgorithmManager([
                     new RS256(),

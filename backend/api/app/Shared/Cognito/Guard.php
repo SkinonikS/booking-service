@@ -2,7 +2,6 @@
 
 namespace App\Shared\Cognito;
 
-use App\Models\User;
 use App\Shared\Cognito\AccessTokenValidators\AccessToken;
 use App\Shared\Cognito\AccessTokenValidators\AccessTokenValidatorInterface;
 use App\Shared\Cognito\JwkSetProviders\JwkSetProviderInterface;
@@ -10,7 +9,6 @@ use App\Shared\Cognito\UserInfoProviders\UserInfoProviderInterface;
 use App\Shared\Cognito\UserProviders\UserProviderInterface;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard as GuardContract;
-use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 
 class Guard implements GuardContract
@@ -50,19 +48,29 @@ class Guard implements GuardContract
             return $this->user = null;
         }
 
-        $user = $this->userProvider->retrieveByCognitoId($accessToken->sub);
+        $user = $this->userProvider->retrieveByCognitoId($accessToken->userName);
 
         if ($user) {
+            if ($user instanceof HasCognitoInterface) {
+                $user->cognitoAccessToken = $accessToken;
+            }
+
             return $this->user = $user;
         }
 
         $userInfo = $this->userInfoProvider->retrieve($bearerToken);
 
-        return $this->user = $this->userProvider->create([
-            'cognito_id' => $userInfo->sub,
+        $user = $this->userProvider->create([
+            'cognito_id' => $accessToken->userName,
             'email' => $userInfo->email,
             'name' => $userInfo->name,
         ]);
+
+        if ($user instanceof HasCognitoInterface) {
+            $user->cognitoAccessToken = $accessToken;
+        }
+
+        return $this->user = $user;
     }
 
     public function validate(array $credentials = [])
