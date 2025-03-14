@@ -39,4 +39,5 @@ jobs:
             --app-id ${{ vars.AMPLIFY_APP_ID }} \
             --branch-name ${{ vars.AMPLIFY_BRANCH_NAME }} \
             --commit-id ${{ github.sha }} \
+            --commit-message ${{ github.event.head_commit.message }} \
             --job-type RELEASE
