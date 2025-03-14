@@ -22,8 +22,8 @@ remote_state {
   }
 }
 
-generate "providers" {
-  path      = "providers.tf"
+generate "aws_provider" {
+  path      = "aws_provider.tf"
   if_exists = "overwrite_terragrunt"
   contents  = <<EOF
 provider "aws" {

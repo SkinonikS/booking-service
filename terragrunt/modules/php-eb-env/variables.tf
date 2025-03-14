@@ -13,6 +13,7 @@ variable "environment_variables" {
   type        = map(string)
   description = "The environment variables for the Elastic Beanstalk application"
   default     = {}
+  sensitive   = true
 }
 
 variable "solution_stack_name" {

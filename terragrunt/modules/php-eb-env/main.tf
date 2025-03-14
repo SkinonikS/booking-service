@@ -191,19 +191,3 @@ resource "aws_elastic_beanstalk_environment" "this" {
   }
 }
 
-resource "terraform_data" "update_app_url_env" {
-  depends_on = [aws_elastic_beanstalk_environment.this]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      aws elasticbeanstalk update-environment \
-        --application-name ${var.eb_application_name} \
-        --environment-name ${aws_elastic_beanstalk_environment.this.name} \
-        --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=APP_URL,Value=http://${aws_elastic_beanstalk_environment.this.cname}
-    EOT
-  }
-
-  triggers_replace = [
-    aws_elastic_beanstalk_environment.this.cname
-  ]
-}
