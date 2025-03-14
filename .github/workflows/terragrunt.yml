@@ -67,11 +67,13 @@ jobs:
       - name: Create Terraform Plugin Cache Dir
         run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
-      - name: Terraform Plugin Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
-          key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
+      # Я заебался с этим кешем. Пока не понял как его правильно настроить. Поэтому закомментировал.
+      # Причем не работает только на гитхабе. На локальной машине все ок. Хуй его знает.
+      # - name: Terraform Plugin Cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+      #     key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('.terraform.lock.hcl', '**/.terraform.lock.hcl') }}
 
       - name: Plan
         uses: gruntwork-io/terragrunt-action@v2
@@ -103,11 +105,12 @@ jobs:
       - name: Create Terraform Plugin Cache Dir
         run: mkdir -p $TF_PLUGIN_CACHE_DIR
 
-      - name: Terraform Plugin Cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TF_PLUGIN_CACHE_DIR }}
-          key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('**/.terraform.lock.hcl') }}
+      # Тоже самое, что и выше.
+      # - name: Terraform Plugin Cache
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ${{ env.TF_PLUGIN_CACHE_DIR }}
+      #     key: ${{ runner.os }}-terraform-plugin-cache-${{ hashFiles('.terraform.lock.hcl', '**/.terraform.lock.hcl')  }}
 
       - name: Apply
         uses: gruntwork-io/terragrunt-action@v2
