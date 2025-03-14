@@ -101,7 +101,6 @@ resource "aws_elastic_beanstalk_environment" "this" {
   solution_stack_name = var.solution_stack_name
   tier                = "WebServer"
   version_label       = aws_elastic_beanstalk_application_version.this.name
-  cname_prefix        = "${local.environment}-"
 
   # EC2 vpc settings
   setting {
