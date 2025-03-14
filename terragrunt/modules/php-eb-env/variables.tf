@@ -46,3 +46,8 @@ variable "instance_profile_arn" {
   type        = string
   description = "The instance profile ARN for the Elastic Beanstalk application"
 }
+
+variable "eb_bucket_name" {
+  type        = string
+  description = "The S3 bucket name for the Elastic Beanstalk application"
+}

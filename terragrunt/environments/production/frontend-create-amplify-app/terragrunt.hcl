@@ -12,13 +12,13 @@ terraform {
   source = "../../../modules/amplify"
 }
 
-# dependency "eb_env" {
-#   config_path = "../backend-create-eb-env"
+dependency "eb_env" {
+  config_path = "../backend-create-eb-env"
 
-#   mock_outputs = {
-#     cname = "cname"
-#   }
-# }
+  mock_outputs = {
+    cname = "cname"
+  }
+}
 
 inputs = {
   name        = "frontend"
@@ -28,9 +28,13 @@ inputs = {
   basic_auth_credentials = "root:naoyuki123"
 
   repository          = "SkinonikS/booking-service"
-  github_access_token = get_env("GITHUB_ACCESS_TOKEN")
+  github_access_token = local.github_access_token
 
   environment_variables = {
-    // API_BASE_URL = dependency.eb_env.outputs.cname
+    NUXT_API_BASE_URL = dependency.eb_env.outputs.eb_cname
   }
+}
+
+locals {
+  github_access_token = get_env("GITHUB_ACCESS_TOKEN")
 }

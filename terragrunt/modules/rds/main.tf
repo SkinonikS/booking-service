@@ -44,6 +44,8 @@ resource "aws_db_instance" "this" {
   multi_az            = false
   publicly_accessible = false
   storage_encrypted   = false
+  skip_final_snapshot = true
+  apply_immediately   = true
 
   backup_retention_period = 7
   allocated_storage       = 5

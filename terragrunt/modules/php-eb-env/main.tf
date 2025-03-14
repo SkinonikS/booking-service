@@ -1,6 +1,41 @@
 locals {
   eb_application_name = lower(var.eb_application_name)
   environment         = lower(var.environment)
+
+  environment_variables = merge(
+    {
+      # App
+      APP_TIMEZONE        = "UTC"
+      APP_LOCALE          = "en"
+      APP_FALLBACK_LOCALE = "en"
+      APP_FAKER_LOCALE    = "en_US"
+      APP_URL             = "http://localhost"
+      # Log
+      LOG_CHANNEL              = "stack"
+      LOG_STACK                = "single"
+      LOG_DEPRECATIONS_CHANNEL = "null"
+      LOG_LEVEL                = "debug"
+      # Session
+      SESSION_DRIVER   = "database"
+      SESSION_LIFETIME = "120"
+      SESSION_ENCRYPT  = "false"
+      SESSION_PATH     = "/"
+      SESSION_DOMAIN   = "null"
+      # Cache
+      CACHE_STORE  = "file"
+      CACHE_PREFIX = ""
+      # Redis
+      REDIS_CLIENT   = "phpredis"
+      REDIS_HOST     = "127.0.0.1"
+      REDIS_PASSWORD = "null"
+      REDIS_PORT     = "6379"
+      # Other
+      APP_MAINTENANCE_DRIVER = "file"
+      BCRYPT_ROUNDS          = "12"
+      PHP_CLI_SERVER_WORKERS = "4"
+    },
+    var.environment_variables
+  )
 }
 
 # Security group for EC2 instances
@@ -41,12 +76,32 @@ resource "random_string" "app_key" {
   special = false
 }
 
+resource "time_static" "curren_time" {}
+
+resource "aws_s3_object" "init_version" {
+  bucket = var.eb_bucket_name
+  key    = "laravel-app-${time_static.curren_time.unix}.zip"
+  source = "sample.zip"
+}
+
+resource "aws_elastic_beanstalk_application_version" "this" {
+  name        = "v-${substr(md5(time_static.curren_time.unix), 0, 8)}-${time_static.curren_time.unix}"
+  description = "Deployed from Terraform"
+  application = var.eb_application_name
+
+  bucket = var.eb_bucket_name
+  key    = aws_s3_object.init_version.key
+}
+
 # Elastic Beanstalk environment
 resource "aws_elastic_beanstalk_environment" "this" {
   name = local.environment
 
   application         = var.eb_application_name
   solution_stack_name = var.solution_stack_name
+  tier                = "WebServer"
+  version_label       = aws_elastic_beanstalk_application_version.this.name
+  cname_prefix        = "${local.environment}-"
 
   # EC2 vpc settings
   setting {
@@ -124,15 +179,32 @@ resource "aws_elastic_beanstalk_environment" "this" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "APP_KEY"
-    value     = "base64:${random_string.app_key.result}"
+    value     = random_string.app_key.result
   }
 
   dynamic "setting" {
-    for_each = var.environment_variables
+    for_each = local.environment_variables
     content {
       namespace = "aws:elasticbeanstalk:application:environment"
       name      = setting.key
       value     = setting.value
     }
   }
+}
+
+resource "terraform_data" "update_app_url_env" {
+  depends_on = [aws_elastic_beanstalk_environment.this]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      aws elasticbeanstalk update-environment \
+        --application-name ${var.eb_application_name} \
+        --environment-name ${aws_elastic_beanstalk_environment.this.name} \
+        --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=APP_URL,Value=http://${aws_elastic_beanstalk_environment.this.cname}
+    EOT
+  }
+
+  triggers_replace = [
+    aws_elastic_beanstalk_environment.this.cname
+  ]
 }

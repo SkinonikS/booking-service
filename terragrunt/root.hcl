@@ -2,9 +2,9 @@ locals {
   remote_state_bucket_region = "eu-north-1"
   remote_state_bucket        = "396608814220-terraform-state"
 
-  aws_region     = get_env("AWS_REGION")
-  aws_access_key = get_env("AWS_ACCESS_KEY")
-  aws_secret_key = get_env("AWS_SECRET_KEY")
+  aws_region            = get_env("AWS_REGION")
+  aws_access_key_id     = get_env("AWS_ACCESS_KEY_ID")
+  aws_secret_access_key = get_env("AWS_SECRET_ACCESS_KEY")
 }
 
 remote_state {
@@ -28,8 +28,8 @@ generate "providers" {
   contents  = <<EOF
 provider "aws" {
   region = var.aws_region
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
+  access_key = var.aws_access_key_id
+  secret_key = var.aws_secret_access_key
 }
 
 variable "aws_region" {
@@ -37,12 +37,12 @@ variable "aws_region" {
   type = string
 }
 
-variable "aws_access_key" {
+variable "aws_access_key_id" {
   description = "The AWS access key to deploy resources."
   type = string
 }
 
-variable "aws_secret_key" {
+variable "aws_secret_access_key" {
   description = "The AWS secret key to deploy resources."
   type = string
 }
@@ -50,7 +50,7 @@ EOF
 }
 
 inputs = {
-  aws_region     = local.aws_region
-  aws_access_key = local.aws_access_key
-  aws_secret_key = local.aws_secret_key
+  aws_region            = local.aws_region
+  aws_access_key_id     = local.aws_access_key_id
+  aws_secret_access_key = local.aws_secret_access_key
 }
