@@ -81,6 +81,7 @@ export default defineNuxtConfig({
         baseUrl: process.env.NUXT_OIDC_PROVIDERS_COGNITO_BASE_URL || '',
       },
     },
+    provideDefaultSecrets: false,
   },
 
   security: {
@@ -104,6 +105,11 @@ export default defineNuxtConfig({
     api: {
       baseUrl: '',
     },
+    oidc_secrets: {
+      oidc_session_secret: process.env.NUXT_OIDC_SESSION_SECRET || '',
+      oidc_token_key: process.env.NUXT_OIDC_TOKEN_KEY || '',
+      oidc_auth_session_secret: process.env.NUXT_OIDC_AUTH_SESSION_SECRET || '',
+    }
   },
 
   watch: [
