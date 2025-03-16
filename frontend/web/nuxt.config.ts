@@ -73,12 +73,12 @@ export default defineNuxtConfig({
     },
     providers: {
       cognito: {
-        clientId: '',
-        clientSecret: '',
-        redirectUri: '',
+        clientId: process.env.NUXT_OIDC_PROVIDERS_COGNITO_CLIENT_ID || '',
+        clientSecret: process.env.NUXT_OIDC_PROVIDERS_COGNITO_CLIENT_SECRET || '',
+        redirectUri: process.env.NUXT_OIDC_PROVIDERS_COGNITO_REDIRECT_URI || '',
         scope: ['openid', 'email', 'profile'],
-        logoutRedirectUri: '',
-        baseUrl: '',
+        logoutRedirectUri: process.env.NUXT_OIDC_PROVIDERS_COGNITO_LOGOUT_REDIRECT_URI || '',
+        baseUrl: process.env.NUXT_OIDC_PROVIDERS_COGNITO_BASE_URL || '',
       },
     },
   },
