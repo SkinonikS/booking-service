@@ -61,11 +61,6 @@ export default defineNuxtConfig({
   nitro: {
     storage: {
       oidc: {
-        driver: 'redis',
-      },
-    },
-    devStorage: {
-      oidc: {
         driver: 'fs',
         base: './.cache/oidc',
       },
@@ -84,8 +79,6 @@ export default defineNuxtConfig({
         scope: ['openid', 'email', 'profile'],
         logoutRedirectUri: '',
         baseUrl: '',
-        exposeIdToken: true,
-        exposeAccessToken: true,
       },
     },
   },
@@ -108,13 +101,8 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    oidc_storage: {
-      redis: {
-        host: 'localhost',
-        port: 6379,
-        password: '',
-        db: 0,
-      },
+    api: {
+      baseUrl: '',
     },
   },
 
