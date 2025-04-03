@@ -29,13 +29,13 @@ class CognitoServiceProvider extends ServiceProvider
     {
         $this->app[AuthManager::class]->extend('cognito', function ($app, $name, $config) {
             $userInfoProvider = new HttpUserInfoProvider(
-                $config['user_pool_url'],
+                $config['user_pool_domain_url'],
                 new HttpClientFactory(),
             );
 
             $jwkSetProvider = new CachedJwkSetProvider(
                 new HttpJwkSetProvider(
-                    $config['base_url'],
+                    $config['user_pool_url'],
                     new HttpClientFactory()
                 ),
                 $app['cache.store'],
@@ -54,7 +54,7 @@ class CognitoServiceProvider extends ServiceProvider
                 new ClaimCheckerManager([
                     new ExpirationTimeChecker($now, 10),
                     new IssuedAtChecker($now, 10),
-                    new IssuerChecker([$config['base_url']]),
+                    new IssuerChecker([$config['user_pool_url']]),
                     new AudienceChecker($config['client_id']),
                     new IsEqualChecker('token_use', 'id'),
                 ]),
