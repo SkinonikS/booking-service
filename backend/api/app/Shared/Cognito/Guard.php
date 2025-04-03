@@ -84,7 +84,7 @@ class Guard implements GuardContract
 
     public function check()
     {
-        return $this->hasUser();
+        return $this->user() !== null;
     }
 
     public function guest()
