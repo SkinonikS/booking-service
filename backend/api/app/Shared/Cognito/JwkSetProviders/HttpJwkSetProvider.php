@@ -2,9 +2,8 @@
 
 namespace App\Shared\Cognito\JwkSetProviders;
 
-use Illuminate\Support\Facades\Http;
-use Jose\Component\Core\JWKSet;
 use Illuminate\Http\Client\Factory as HttpClientFactory;
+use Jose\Component\Core\JWKSet;
 
 class HttpJwkSetProvider implements JwkSetProviderInterface
 {
