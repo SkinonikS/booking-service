@@ -21,14 +21,14 @@ class CancelBookingMutation
             ->with(['serviceSchedule.weekdaySchedule.serviceProvider'])
             ->findOrFail($args['id']);
 
-        $validated = $this->validate($args['input']);
+        $validated = $this->validate($args['input'] ?? []);
 
         $bookingProvider = $booking
             ->serviceSchedule
             ->weekdaySchedule
             ->bookingProvider;
 
-        if (! $this->can('cancel', $booking) || $this->can('update', $bookingProvider)) {
+        if (! $this->can('cancel', $booking) || ! $this->can('update', $bookingProvider)) {
             throw new NotFoundHttpException;
         }
 
@@ -37,7 +37,7 @@ class CancelBookingMutation
         }
 
         $booking->update([
-            'canceled_at' => now(),
+            'cancelled_at' => now(),
             'cancellation_reason' => $validated['cancellationReason'],
         ]);
 
