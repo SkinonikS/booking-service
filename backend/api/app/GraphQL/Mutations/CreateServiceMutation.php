@@ -17,13 +17,18 @@ class CreateServiceMutation
     {
         $this->authorize('create', Service::class);
 
-        return Service::query()
-            ->create($this->validate($args));
+        $validated = $this->validate($args['input'] ?? []);
+
+        return Service::query()->create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'booking_provider_id' => $validated['bookingProviderId'],
+        ]);
     }
 
     protected function validate(array $input): array
     {
-        $validator = Validator::make($input['input'], [
+        $validator = Validator::make($input, [
             'name' => ['required', 'string', 'min:4', 'max:32'],
             'description' => ['nullable', 'string', 'max:2048'],
             'bookingProviderId' => ['required', 'string', 'uuid'],
