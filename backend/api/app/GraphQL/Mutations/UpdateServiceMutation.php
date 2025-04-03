@@ -17,15 +17,21 @@ class UpdateServiceMutation
             ->with(['bookingProvider'])
             ->findOrFail($args['id']);
 
-        $this->authorize('update', $service->bookingProvider);
+        $this->authorize('update', $service);
 
-        return $service
-            ->update($this->validate($args));
+        $validated = $this->validate($args['input'] ?? []);
+
+        $service->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+        ]);
+
+        return $service;
     }
 
     protected function validate(array $input): array
     {
-        $validator = Validator::make($input['input'], [
+        $validator = Validator::make($input, [
             'name' => ['required', 'string', 'min:4', 'max:32'],
             'description' => ['nullable', 'string', 'max:2048'],
         ]);
