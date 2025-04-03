@@ -18,7 +18,7 @@ class UpdateBookingProviderMutation
 
         $this->authorize('update', $bookingProvider);
 
-        $validated = $this->validate($args['input']);
+        $validated = $this->validate($args['input'] ?? []);
 
         $bookingProvider->update([
             'is_active' => $validated['isActive'],
