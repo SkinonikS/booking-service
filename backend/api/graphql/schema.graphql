@@ -1,0 +1,275 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+"A datetime string in ISO 8601 format in UTC with nanoseconds `YYYY-MM-DDTHH:mm:ss.SSSSSSZ`, e.g. `2020-04-20T16:20:04.000000Z`."
+scalar DateTimeUtc @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTimeUtc")
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+type Mutation {
+  # BookingProvider
+
+  createBookingProvider(
+    input: CreateBookingInput!
+  ): Booking!
+
+  updateBookingProvider(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+    input: UpdateBookingInput!
+  ): Booking
+
+  deleteBookingProvider(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+  ): Booking
+
+  deleteBookingProviderImage(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+  ): Booking
+
+  # Booking
+
+  createBooking(
+    input: CreateBookingInput!
+  ): Booking! @auth(guards: ["cognito"])
+
+  cancelBooking(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+    input: CancelBookingInput!
+  ): Booking
+
+  # Service
+
+  createService(
+    input: CreateServiceInput!
+  ): Service! @auth(guards: ["cognito"])
+
+  updateService(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+    input: UpdateServiceInput!
+  ): Service
+
+  # Weekday Schedule
+
+  updateWeekdaySchedule(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+    input: UpdateWeekdaySchedule!
+  ): WeekdaySchedule
+
+  # Service Schedule
+
+  createServiceSchedule(
+    weekdayScheduleId: ID! @rules(apply: ["required", "string", "uuid"])
+    input: CreateServiceScheduleInput!
+  ): ServiceSchedule!
+
+  updateServiceSchedule(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+    input: UpdateServiceScheduleInput!
+  ): ServiceSchedule
+
+  deleteServiceSchedule(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+  ): ServiceSchedule
+}
+
+input CreateServiceScheduleInput {
+  isActive: Boolean!
+  openTime: Int!
+  closeTime: Int!
+  maxBookings: Int!
+  timeSpan: Int!
+}
+
+input UpdateServiceScheduleInput {
+  isActive: Boolean!
+  openTime: Int!
+  closeTime: Int!
+  maxBookings: Int!
+  timeSpan: Int!
+}
+
+input UpdateWeekdaySchedule {
+  isActive: Boolean!
+  openTime: Int!
+  closeTime: Int!
+}
+
+input CreateServiceInput {
+  name: String!
+  description: String
+  bookingProviderId: ID!
+}
+
+input UpdateServiceInput {
+  name: String!
+  description: String
+}
+
+input CreateBookingInput {
+  isActive: Boolean!
+  name: String!
+  email: String!
+  phone: String!
+  website: String
+  address: String!
+  aboutUs: String!
+}
+
+input CancelBookingInput {
+  cancellationReason: String!
+}
+
+input CreateBookingProviderInput {
+  name: String!
+  email: String!
+  phone: String!
+  website: String
+  address: String!
+  aboutUs: String!
+  categoryId: ID!
+}
+
+input UpdateBookingProviderInput {
+  name: String!
+  email: String!
+  phone: String!
+  website: String
+  address: String!
+  aboutUs: String!
+}
+
+type Query {
+  me: User @auth(guards: ["cognito"])
+
+  categories: [Category!]! @all
+
+  serviceDatepicker(
+    serviceId: ID! @rules(apply: ["uuid"])
+    date: Date!
+  ): [ServiceDatepicker!]! @field(resolver: "App\\GraphQL\\Queries\\BookingProviderDatePicker")
+
+  services: [Service!]! @paginate(defaultCount: 10)
+
+  service(
+    id: ID! @eq @rules(apply: ["uuid"])
+  ): Service @find
+
+  serviceSchedule(
+    id: ID! @eq @rules(apply: ["uuid"])
+  ): ServiceSchedule @find
+
+  weekdaySchedule(
+    id: ID! @eq @rules(apply: ["uuid"])
+  ): WeekdaySchedule @find
+
+  bookingProviders(
+    categories: [ID!]
+  ): [BookingProvider!]! @paginate(defaultCount: 10, builder: "App\\GraphQL\\Queries\\BookingProvider")
+
+  bookingProvider(
+    id: ID! @eq @rules(apply: ["uuid"])
+  ): BookingProvider @find
+
+  # REMOVE THIS LATER
+  users: [User!]! @paginate(defaultCount: 10)
+}
+
+type Media {
+  id: ID!
+  baseName: String! @rename(attribute: "basename")
+  fullUrl: String! @method(name: "getUrl")
+  fileSize: Int! @rename(attribute: "size")
+}
+
+type BookedTimeSlot {
+  timeSlot: Int
+  currentBookings: Int
+}
+
+type ServiceDatepicker  {
+  serviceSchedule: ServiceSchedule!
+  bookedTimeSlots: [BookedTimeSlot!]!
+}
+
+type Booking {
+  id: ID!
+  date: Date!
+  timeSlot: Int! @rename(attribute: "time_slot")
+  canncellationReason: String @rename(attribute: "cancellation_reason")
+  canncelledAt: DateTimeUtc @rename(attribute: "cancelled_at")
+  createdAt: DateTimeUtc! @rename(attribute: "created_at")
+  updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
+  user: User! @belongsTo(relation: "user")
+  bookingProvider: BookingProvider! @belongsTo(relation: "bookingProvider")
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  createdAt: DateTimeUtc! @rename(attribute: "created_at")
+  updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
+  bookingProviders: [BookingProvider!]! @hasMany(relation: "bookingProviders")
+}
+
+type WeekdaySchedule {
+  id: ID!
+  weekday: Int! @rename(attribute: "weekday_id")
+  isActive: Boolean! @rename(attribute: "is_active")
+  openTime: Int! @rename(attribute: "open_time")
+  closeTime: Int! @rename(attribute: "close_time")
+  createdAt: DateTimeUtc! @rename(attribute: "created_at")
+  updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
+  bookingProvider: BookingProvider! @belongsTo(relation: "bookingProvider")
+  serviceSchedules: [ServiceSchedule!]! @hasMany(relation: "serviceSchedules")
+}
+
+type ServiceSchedule {
+  id: ID!
+  isActive: Boolean! @rename(attribute: "is_active")
+  openTime: Int! @rename(attribute: "open_time")
+  closeTime: Int! @rename(attribute: "close_time")
+  maxBookings: Int! @rename(attribute: "max_bookings")
+  timeSpan: Int! @rename(attribute: "time_span")
+  createdAt: DateTimeUtc! @rename(attribute: "created_at")
+  updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
+  service: Service! @belongsTo(relation: "service")
+  weekdaySchedule: WeekdaySchedule! @belongsTo(relation: "weekdaySchedule")
+}
+
+type BookingProvider {
+  id: ID!
+  name: String!
+  email: String!
+  phone: String!
+  website: String
+  address: String!
+  aboutUs: String! @rename(attribute: "about_us")
+  isActive: Boolean! @rename(attribute: "is_active")
+  createdAt: DateTimeUtc! @rename(attribute: "created_at")
+  updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
+  user: User! @belongsTo(relation: "user")
+  category: Category! @belongsTo(relation: "category")
+  services: [Service!]! @hasMany(relation: "services")
+  weekdaySchedules: [WeekdaySchedule!]! @hasMany(relation: "weekdaySchedules")
+  bookings: [Booking!]! @hasMany(relation: "bookings") @orderBy(columns: ["date", "time_slot"])
+  galleryImages: [Media] @field(resolver: "App\\GraphQL\\Resolvers\\BookingProvider@galleryImages")
+  coverImage: Media @field(resolver: "App\\GraphQL\\Resolvers\\BookingProvider@coverImage")
+}
+
+type Service {
+  id: ID!
+  name: String!
+  description: String
+  createdAt: DateTimeUtc! @rename(attribute: "created_at")
+  updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
+  bookingProvider: BookingProvider! @belongsTo(relation: "bookingProvider")
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String
+  createdAt: DateTimeUtc! @rename(attribute: "created_at")
+  updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
+  bookingProviders: [BookingProvider!]! @hasMany(relation: "bookingProviders")
+}
