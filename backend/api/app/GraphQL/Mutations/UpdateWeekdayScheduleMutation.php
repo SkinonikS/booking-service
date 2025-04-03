@@ -13,6 +13,7 @@ class UpdateWeekdayScheduleMutation
     use AuthorizesRequests;
 
     /** @param  array{}  $args */
+    /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
         $weekdaySchedule = WeekdaySchedule::query()
@@ -21,22 +22,25 @@ class UpdateWeekdayScheduleMutation
 
         $this->authorize('update', $weekdaySchedule->bookingProvider);
 
-        $weekdaySchedule->update(
-            $this->validate($weekdaySchedule, $args)
-        );
+        $validated = $this->validate($weekdaySchedule, $args['input']);
+
+        $weekdaySchedule->update([
+            'open_time' => $validated['openTime'],
+            'close_time' => $validated['closeTime'],
+        ]);
 
         return $weekdaySchedule;
     }
 
     protected function validate(WeekdaySchedule $weekdaySchedule, array $input): array
     {
-        $validator = Validator::make($input['input'], [
+        $validator = Validator::make($input, [
             'openTime' => 'required|integer|min:0',
             'closeTime' => 'required|integer|min:0|gte:openTime',
         ]);
 
         $validator->after(function (ValidationValidator $validator) use ($weekdaySchedule) {
-            if ($validator->errors()->has('openTime') || $validator->errors()->has('closeTime')) {
+            if ($validator->errors()->hasAny(['openTime', 'closeTime'])) {
                 return;
             }
 
@@ -45,8 +49,10 @@ class UpdateWeekdayScheduleMutation
             $hasOutOfBoundsSchedules = ServiceSchedule::query()
                 ->where('is_active', true)
                 ->where('weekday_schedule_id', $weekdaySchedule->getKey())
-                ->where('openTime', '<', $validated['openTime'])
-                ->orWhere('closeTime', '>', $validated['closeTime'])
+                ->where(function ($query) use ($validated) {
+                    $query->where('open_time', '<', $validated['openTime'])
+                        ->orWhere('close_time', '>', $validated['closeTime']);
+                })
                 ->exists();
 
             if ($hasOutOfBoundsSchedules) {

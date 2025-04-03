@@ -34,7 +34,7 @@ final readonly class CreateBookingMutation
             'date' => ['required', 'date', 'after_or_equal:today'],
             'timeSlot' => ['required', 'integer', 'min:0', 'max:1440'],
         ])->after(function (ValidationValidator $validator) {
-            if ($validator->errors()->has(['serviceScheduleId', 'date', 'timeSlot'])) {
+            if ($validator->errors()->hasAny(['serviceScheduleId', 'date', 'timeSlot'])) {
                 return;
             }
 

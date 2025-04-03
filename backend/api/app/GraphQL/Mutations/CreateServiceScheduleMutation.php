@@ -41,7 +41,7 @@ class CreateServiceScheduleMutation
             'maxBookings' => ['required', 'integer', 'min:1', 'max:255'],
             'timeSpan' => ['required', 'integer', 'min:1', 'max:1440'],
         ])->after(function (ValidationValidator $validator) {
-            if ($validator->errors()->has(['openTime', 'closeTime', 'weekdayScheduleId', 'serviceId', 'timeSpan'])) {
+            if ($validator->errors()->hasAny(['openTime', 'closeTime', 'weekdayScheduleId', 'serviceId', 'timeSpan'])) {
                 return;
             }
 

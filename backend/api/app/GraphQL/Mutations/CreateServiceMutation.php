@@ -33,7 +33,7 @@ class CreateServiceMutation
             'description' => ['nullable', 'string', 'max:2048'],
             'bookingProviderId' => ['required', 'string', 'uuid'],
         ])->after(function ($validator) {
-            if ($validator->errors()->has('bookingProviderId')) {
+            if ($validator->errors()->hasAny(['bookingProviderId'])) {
                 return;
             }
 
