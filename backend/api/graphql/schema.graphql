@@ -21,7 +21,11 @@ type Mutation {
     id: ID! @rules(apply: ["required", "string", "uuid"])
   ): Booking
 
-  deleteBookingProviderImage(
+  deleteBookingProviderCoverImage(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+  ): Booking
+
+  deleteBookingProviderGalleryImage(
     id: ID! @rules(apply: ["required", "string", "uuid"])
   ): Booking
 
@@ -51,13 +55,12 @@ type Mutation {
 
   updateWeekdaySchedule(
     id: ID! @rules(apply: ["required", "string", "uuid"])
-    input: UpdateWeekdaySchedule!
+    input: UpdateWeekdayScheduleInput!
   ): WeekdaySchedule
 
   # Service Schedule
 
   createServiceSchedule(
-    weekdayScheduleId: ID! @rules(apply: ["required", "string", "uuid"])
     input: CreateServiceScheduleInput!
   ): ServiceSchedule!
 
@@ -72,6 +75,8 @@ type Mutation {
 }
 
 input CreateServiceScheduleInput {
+  serviceId: ID!
+  weekdayScheduleId: ID!
   isActive: Boolean!
   openTime: Int!
   closeTime: Int!
@@ -87,7 +92,7 @@ input UpdateServiceScheduleInput {
   timeSpan: Int!
 }
 
-input UpdateWeekdaySchedule {
+input UpdateWeekdayScheduleInput {
   isActive: Boolean!
   openTime: Int!
   closeTime: Int!
@@ -194,8 +199,8 @@ type Booking {
   id: ID!
   date: Date!
   timeSlot: Int! @rename(attribute: "time_slot")
-  canncellationReason: String @rename(attribute: "cancellation_reason")
-  canncelledAt: DateTimeUtc @rename(attribute: "cancelled_at")
+  cancellationReason: String @rename(attribute: "cancellation_reason")
+  cancelledAt: DateTimeUtc @rename(attribute: "cancelled_at")
   createdAt: DateTimeUtc! @rename(attribute: "created_at")
   updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
   user: User! @belongsTo(relation: "user")
