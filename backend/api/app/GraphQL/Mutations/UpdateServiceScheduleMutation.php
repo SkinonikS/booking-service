@@ -40,7 +40,7 @@ class UpdateServiceScheduleMutation
             'maxBookings' => ['required', 'integer', 'min:1', 'max:255'],
             'timeSpan' => ['required', 'integer', 'min:1', 'max:1440'],
         ])->after(function (ValidationValidator $validator) use ($serviceSchedule) {
-            if ($validator->errors()->has(['openTime', 'closeTime', 'timeSpan'])) {
+            if ($validator->errors()->hasAny(['openTime', 'closeTime', 'timeSpan'])) {
                 return;
             }
 
