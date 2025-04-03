@@ -15,7 +15,7 @@ class CreateBookingProviderMutation
     {
         $this->authorize('update', BookingProvider::class);
 
-        $validated = $this->validate($args['input']);
+        $validated = $this->validate($args['input'] ?? []);
 
         return BookingProvider::query()->create([
             'isActive' => $validated['isActive'],
@@ -31,7 +31,7 @@ class CreateBookingProviderMutation
 
     protected function validate(array $input): array
     {
-        $validator = Validator::make($input['input'], [
+        $validator = Validator::make($input, [
             'isActive' => ['required', 'boolean'],
             'name' => ['required', 'string', 'min:4', 'max:32'],
             'email' => ['required', 'email', 'max:64'],
