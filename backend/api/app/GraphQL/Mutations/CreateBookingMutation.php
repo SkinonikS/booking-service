@@ -15,7 +15,21 @@ final readonly class CreateBookingMutation
     /** @param array{serviceId: int, date: string, timeSlot: int} $args */
     public function __invoke(null $_, array $args)
     {
-        $validator = Validator::make($args, [
+        $validated = $this->validate($args['input'] ?? []);
+
+        $booking = Booking::query()->create([
+            'service_schedule_id' => $validated['serviceScheduleId'],
+            'user_id' => Auth::id(),
+            'date' => $validated['date'],
+            'time_slot' => $validated['timeSlot'],
+        ]);
+
+        return $booking;
+    }
+
+    public function validate(array $input): array
+    {
+        $validator = Validator::make($input, [
             'serviceScheduleId' => ['required', 'string', 'uuid'],
             'date' => ['required', 'date', 'after_or_equal:today'],
             'timeSlot' => ['required', 'integer', 'min:0', 'max:1440'],
@@ -67,15 +81,6 @@ final readonly class CreateBookingMutation
             }
         });
 
-        $validated = $validator->validated();
-
-        $booking = Booking::query()->create([
-            'service_schedule_id' => $validated['serviceScheduleId'],
-            'user_id' => Auth::id(),
-            'date' => $validated['date'],
-            'time_slot' => $validated['timeSlot'],
-        ]);
-
-        return $booking;
+        return $validator->validate();
     }
 }
