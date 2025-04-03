@@ -42,9 +42,10 @@ return [
         ],
         'cognito' => [
             'driver' => 'cognito',
+            'provider' => 'users', // Actually, this is not used in the Cognito driver, added because some commands require it (e.g. make:policy)
             'client_id' => env('AUTH_COGNITO_CLIENT_ID'),
-            'base_url' => env('AUTH_COGNITO_BASE_URL'),
-            'user_pool_url' => env('AUTH_COGNITO_POOL_URL'),
+            'user_pool_domain_url' => env('AUTH_COGNITO_USER_POOL_DOMAIN_URL'),
+            'user_pool_url' => env('AUTH_COGNITO_USER_POOL_URL'),
         ],
     ],
 
