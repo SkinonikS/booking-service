@@ -27,7 +27,7 @@ class UpdateBookingProviderMutation
             'phone' => $validated['phone'],
             'address' => $validated['address'],
             'website' => $validated['website'],
-            'about_us' => $validated['about_us'],
+            'about_us' => $validated['aboutUs'],
         ]);
 
         return $bookingProvider;
