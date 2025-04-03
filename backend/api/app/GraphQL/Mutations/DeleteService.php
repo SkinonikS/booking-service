@@ -5,7 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\Service;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class DeleteServiceMutation
+class DeleteService
 {
     use AuthorizesRequests;
 

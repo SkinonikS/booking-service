@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as ValidationValidator;
 
-class CreateServiceScheduleMutation
+class CreateServiceSchedule
 {
     use Authorizable;
 

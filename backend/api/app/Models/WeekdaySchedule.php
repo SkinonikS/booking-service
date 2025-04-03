@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property string $booking_provider_id
  * @property int $weekday_id
- * @property Weekday $weekday
  * @property bool $is_active
  * @property \Illuminate\Support\Carbon $open_time
  * @property \Illuminate\Support\Carbon $close_time

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as ValidationValidator;
 
-class UpdateServiceScheduleMutation
+class UpdateServiceSchedule
 {
     use AuthorizesRequests;
 

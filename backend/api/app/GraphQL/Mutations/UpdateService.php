@@ -6,7 +6,7 @@ use App\Models\Service;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 
-class UpdateServiceMutation
+class UpdateService
 {
     use AuthorizesRequests;
 

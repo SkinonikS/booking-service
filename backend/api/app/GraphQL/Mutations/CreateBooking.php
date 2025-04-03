@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\GraphQL\Mutations;
 
 use App\Models\Booking;
@@ -10,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as ValidationValidator;
 
-final readonly class CreateBookingMutation
+class CreateBooking
 {
     /** @param array{serviceId: int, date: string, timeSlot: int} $args */
     public function __invoke(null $_, array $args)

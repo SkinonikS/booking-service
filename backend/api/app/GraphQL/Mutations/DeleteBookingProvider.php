@@ -5,7 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\BookingProvider;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class DeleteBookingProviderMutation
+class DeleteBookingProvider
 {
     use AuthorizesRequests;
 

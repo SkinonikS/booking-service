@@ -6,31 +6,27 @@ use App\Models\BookingProvider;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Validator;
 
-class UpdateBookingProviderMutation
+class CreateBookingProvider
 {
     use AuthorizesRequests;
 
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
-        $bookingProvider = BookingProvider::query()
-            ->findOrFail($args['id']);
-
-        $this->authorize('update', $bookingProvider);
+        $this->authorize('update', BookingProvider::class);
 
         $validated = $this->validate($args['input'] ?? []);
 
-        $bookingProvider->update([
-            'is_active' => $validated['isActive'],
+        return BookingProvider::query()->create([
+            'isActive' => $validated['isActive'],
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'address' => $validated['address'],
             'website' => $validated['website'],
             'about_us' => $validated['aboutUs'],
+            'category_id' => $validated['categoryId'],
         ]);
-
-        return $bookingProvider;
     }
 
     protected function validate(array $input): array
@@ -43,6 +39,7 @@ class UpdateBookingProviderMutation
             'address' => ['required', 'string', 'min:4', 'max:64'],
             'website' => ['required', 'string', 'min:4', 'max:32'],
             'aboutUs' => ['required', 'string', 'min:4', 'max:2048'],
+            'categoryId' => ['required', 'string', 'uuid', 'exists:App\\Models\\Category,id'],
         ]);
 
         return $validator->validate();

@@ -5,7 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\ServiceSchedule;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-class DeleteServiceScheduleMutation
+class DeleteServiceSchedule
 {
     use AuthorizesRequests;
 
