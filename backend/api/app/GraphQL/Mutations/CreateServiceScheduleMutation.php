@@ -72,7 +72,7 @@ class CreateServiceScheduleMutation
 
             $bookingProvider = ModelsBookingProvider::query()->find($weekdaySchedule->booking_provider_id);
 
-            if (! $bookingProvider || $this->cannot('update', $bookingProvider)) {
+            if (! $bookingProvider || ! $this->can('update', $bookingProvider)) {
                 $validator->errors()->add('weekdayScheduleId', 'Invalid booking provider ID');
                 $validator->errors()->add('serviceId', 'Invalid booking provider ID');
 
@@ -104,6 +104,6 @@ class CreateServiceScheduleMutation
             }
         });
 
-        return $validator->validated();
+        return $validator->validate();
     }
 }
