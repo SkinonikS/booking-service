@@ -31,6 +31,7 @@ class ServiceSchedule extends Model
         'close_time',
         'time_span',
         'max_bookings',
+        'is_active',
     ];
 
     public function maxBookingsForDay(): int

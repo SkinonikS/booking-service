@@ -41,20 +41,22 @@ class BookingProvider extends Model implements MediableInterface
         'phone',
         'address',
         'about_us',
+        'is_active',
+        'website',
     ];
 
     protected static function booted(): void
     {
-        static::created(function (self $self) {
-            $weekdaySchedules = collect(WeekDay::cases())->map(fn ($weekday) => [
-                'weekday_id' => $weekday->value,
-                'open_time' => 480,
-                'close_time' => 1080,
-                'is_active' => false,
-            ]);
+        // static::created(function (self $self) {
+        //     $weekdaySchedules = collect(WeekDay::cases())->map(fn ($weekday) => [
+        //         'weekday_id' => $weekday->value,
+        //         'open_time' => 480,
+        //         'close_time' => 1080,
+        //         'is_active' => false,
+        //     ]);
 
-            $self->weekdaySchedules()->createMany($weekdaySchedules);
-        });
+        //     $self->weekdaySchedules()->createMany($weekdaySchedules);
+        // });
     }
 
     public function services(): HasMany
