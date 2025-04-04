@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $description
  * @property string $booking_provider_id
+ * @property \App\Models\BookingProvider $bookingProvider
+ * @property \Illuminate\Database\Eloquent\Collection<int, \App\Models\ServiceSchedule> $serviceSchedules
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */
