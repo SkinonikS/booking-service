@@ -13,7 +13,7 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedMediumInteger('time_slot');
             $table->text('cancellation_reason')->nullable();
-            $table->timestamp('canncelled_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
         });
     }
