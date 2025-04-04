@@ -12,6 +12,8 @@
 */
 
 pest()->extend(Tests\TestCase::class)
+    ->use(Nuwave\Lighthouse\Testing\MakesGraphQLRequests::class)
+    ->use(Nuwave\Lighthouse\Testing\RefreshesSchemaCache::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
 
