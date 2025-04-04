@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('address');
+            $table->string('website')->nullable();
             $table->text('about_us');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
