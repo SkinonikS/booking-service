@@ -17,7 +17,7 @@ class UpdateService
             ->with(['bookingProvider'])
             ->findOrFail($args['id']);
 
-        $this->authorize('update', $service);
+        $this->authorize('update', $service->bookingProvider);
 
         $validated = $this->validate($args['input'] ?? []);
 

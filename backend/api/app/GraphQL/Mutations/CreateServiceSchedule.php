@@ -6,14 +6,12 @@ use App\Models\BookingProvider as ModelsBookingProvider;
 use App\Models\Service;
 use App\Models\ServiceSchedule;
 use App\Models\WeekdaySchedule;
-use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Validator as ValidationValidator;
 
 class CreateServiceSchedule
 {
-    use Authorizable;
-
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
@@ -36,8 +34,8 @@ class CreateServiceSchedule
         $validator = Validator::make($input, [
             'weekdayScheduleId' => ['required', 'string', 'uuid'],
             'serviceId' => ['required', 'string', 'uuid'],
-            'openTime' => ['required', 'integer', 'min:0', 'max:24'],
-            'closeTime' => ['required', 'integer', 'min:0', 'max:24', 'gte:openTime'],
+            'openTime' => ['required', 'integer', 'min:0', 'max:1440'],
+            'closeTime' => ['required', 'integer', 'min:0', 'max:1440', 'gte:openTime'],
             'maxBookings' => ['required', 'integer', 'min:1', 'max:255'],
             'timeSpan' => ['required', 'integer', 'min:1', 'max:1440'],
         ])->after(function (ValidationValidator $validator) {
@@ -72,7 +70,12 @@ class CreateServiceSchedule
 
             $bookingProvider = ModelsBookingProvider::query()->find($weekdaySchedule->booking_provider_id);
 
-            if (! $bookingProvider || ! $this->can('update', $bookingProvider)) {
+            /**
+             * @var \App\Models\User
+             */
+            $user = Auth::user();
+
+            if (! $bookingProvider || ! $user->can('update', $bookingProvider)) {
                 $validator->errors()->add('weekdayScheduleId', 'Invalid booking provider ID');
                 $validator->errors()->add('serviceId', 'Invalid booking provider ID');
 
@@ -83,7 +86,7 @@ class CreateServiceSchedule
             $closeTime = $validated['closeTime'];
             $timeSpan = $validated['timeSpan'];
 
-            if ($openTime < $weekdaySchedule->openTime || $openTime > $weekdaySchedule->closeTime) {
+            if ($openTime < $weekdaySchedule->open_time || $openTime > $weekdaySchedule->close_time) {
                 $validator->errors()->add('openTime', 'Open time must be within weekdaySchedule time range');
                 $validator->errors()->add('closeTime', 'Close time must be within weekdaySchedule time range');
 

@@ -15,8 +15,6 @@ class CreateService
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
-        $this->authorize('create', Service::class);
-
         $validated = $this->validate($args['input'] ?? []);
 
         return Service::query()->create([
@@ -42,7 +40,12 @@ class CreateService
             $bookingProvider = BookingProvider::query()
                 ->find($validated['bookingProviderId']);
 
-            if (! $bookingProvider || $bookingProvider->user_id !== Auth::id()) {
+            /**
+             * @var \App\Models\User
+             */
+            $user = Auth::user();
+
+            if (! $bookingProvider || ! $user->can('update', $bookingProvider)) {
                 $validator->errors()->add('bookingProviderId', 'The booking provider does not exist.');
             }
         });

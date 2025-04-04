@@ -46,15 +46,15 @@ class CreateBooking
                 return;
             }
 
-            if ($validated['timeSlot'] < $serviceSchedule->openTime || $validated['timeSlot'] >= $serviceSchedule->closeTime) {
-                $validator->errors()->add('timeSlot', "Time slot must be within service schedule hours ({$serviceSchedule->openTime} to {$serviceSchedule->closeTime}).");
+            if ($validated['timeSlot'] < $serviceSchedule->open_time || $validated['timeSlot'] >= $serviceSchedule->close_time) {
+                $validator->errors()->add('timeSlot', "Time slot must be within service schedule hours ({$serviceSchedule->open_time} to {$serviceSchedule->close_time}).");
 
                 return;
             }
 
-            if ($serviceSchedule->timeSpan > 0) {
+            if ($serviceSchedule->time_span > 0) {
                 $validSlot = false;
-                for ($slot = $serviceSchedule->openTime; $slot < $serviceSchedule->closeTime; $slot += $serviceSchedule->timeSpan) {
+                for ($slot = $serviceSchedule->open_time; $slot < $serviceSchedule->close_time; $slot += $serviceSchedule->time_span) {
                     if ($validated['timeSlot'] === $slot) {
                         $validSlot = true;
                         break;
@@ -74,7 +74,7 @@ class CreateBooking
                 ->whereNull('cancelled_at')
                 ->count();
 
-            if ($currentBookings >= $serviceSchedule->maxBookings) {
+            if ($currentBookings >= $serviceSchedule->max_bookings) {
                 $validator->errors()->add('timeSlot', 'Maximum number of bookings reached for this time slot.');
             }
         });

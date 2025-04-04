@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\BookingProvider;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CreateBookingProvider
@@ -13,12 +14,12 @@ class CreateBookingProvider
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
-        $this->authorize('update', BookingProvider::class);
+        $this->authorize('create', BookingProvider::class);
 
         $validated = $this->validate($args['input'] ?? []);
 
         return BookingProvider::query()->create([
-            'isActive' => $validated['isActive'],
+            'is_active' => $validated['isActive'],
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
@@ -26,6 +27,7 @@ class CreateBookingProvider
             'website' => $validated['website'],
             'about_us' => $validated['aboutUs'],
             'category_id' => $validated['categoryId'],
+            'user_id' => Auth::id(),
         ]);
     }
 

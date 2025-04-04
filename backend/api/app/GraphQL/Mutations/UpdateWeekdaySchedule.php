@@ -27,6 +27,7 @@ class UpdateWeekdaySchedule
         $weekdaySchedule->update([
             'open_time' => $validated['openTime'],
             'close_time' => $validated['closeTime'],
+            'is_active' => $validated['isActive'],
         ]);
 
         return $weekdaySchedule;
@@ -35,8 +36,9 @@ class UpdateWeekdaySchedule
     protected function validate(WeekdaySchedule $weekdaySchedule, array $input): array
     {
         $validator = Validator::make($input, [
-            'openTime' => 'required|integer|min:0',
-            'closeTime' => 'required|integer|min:0|gte:openTime',
+            'openTime' => ['required', 'integer', 'min:0', 'max:1440'],
+            'closeTime' => ['required', 'integer', 'min:0', 'max:1440', 'gte:openTime'],
+            'isActive' => ['required', 'boolean'],
         ]);
 
         $validator->after(function (ValidationValidator $validator) use ($weekdaySchedule) {

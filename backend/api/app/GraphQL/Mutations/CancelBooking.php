@@ -3,22 +3,21 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\Booking;
-use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CancelBooking
 {
-    use Authorizable;
     use AuthorizesRequests;
 
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
         $booking = Booking::query()
-            ->with(['serviceSchedule.weekdaySchedule.serviceProvider'])
+            ->with(['serviceSchedule.weekdaySchedule.bookingProvider'])
             ->findOrFail($args['id']);
 
         $validated = $this->validate($args['input'] ?? []);
@@ -28,7 +27,12 @@ class CancelBooking
             ->weekdaySchedule
             ->bookingProvider;
 
-        if (! $this->can('cancel', $booking) || ! $this->can('update', $bookingProvider)) {
+        /**
+         * @var \App\Models\User
+         */
+        $user = Auth::user();
+
+        if (! $user->can('cancel', $booking) || ! $user->can('update', $bookingProvider)) {
             throw new NotFoundHttpException;
         }
 

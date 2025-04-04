@@ -35,8 +35,8 @@ class UpdateServiceSchedule
     protected function validate(ServiceSchedule $serviceSchedule, array $input): array
     {
         $validator = Validator::make($input, [
-            'openTime' => ['required', 'integer', 'min:0', 'max:24'],
-            'closeTime' => ['required', 'integer', 'min:0', 'max:24', 'gte:openTime'],
+            'openTime' => ['required', 'integer', 'min:0', 'max:1440'],
+            'closeTime' => ['required', 'integer', 'min:0', 'max:1440', 'gte:openTime'],
             'maxBookings' => ['required', 'integer', 'min:1', 'max:255'],
             'timeSpan' => ['required', 'integer', 'min:1', 'max:1440'],
         ])->after(function (ValidationValidator $validator) use ($serviceSchedule) {
@@ -52,7 +52,7 @@ class UpdateServiceSchedule
 
             $weekdaySchedule = $serviceSchedule->weekdaySchedule;
 
-            if ($openTime < $weekdaySchedule->openTime || $openTime > $weekdaySchedule->closeTime) {
+            if ($openTime < $weekdaySchedule->open_time || $openTime > $weekdaySchedule->close_time) {
                 $validator->errors()->add('openTime', 'Open time must be within weekdaySchedule time range');
                 $validator->errors()->add('closeTime', 'Close time must be within weekdaySchedule time range');
 
