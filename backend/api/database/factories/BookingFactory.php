@@ -17,22 +17,20 @@ class BookingFactory extends Factory
      */
     public function definition(): array
     {
-        $serviceSchedule = ServiceSchedule::query()
-            ->with(['weekdaySchedule'])
-            ->inRandomOrder()
-            ->first();
+        /**
+         * @var \App\Models\ServiceSchedule
+         */
+        $serviceSchedule = ServiceSchedule::factory()->create();
 
-        $randomDate = Carbon::instance(fake()->dateTimeBetween('now', '+90 days'))->weekday(
-            $serviceSchedule->weekdaySchedule->weekday->value
+        $date = Carbon::instance(fake()->dateTimeBetween('now', '+14 days'))->weekday(
+            $serviceSchedule->weekdaySchedule->weekday_id
         );
 
         return [
             'service_schedule_id' => $serviceSchedule->getKey(),
-            'user_id' => User::query()->inRandomOrder()->first()->getKey(),
-            'date' => $randomDate,
-            'time_slot' => fake()->numberBetween(1, 1440),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'user_id' => User::factory(),
+            'date' => $date,
+            'time_slot' => $serviceSchedule->open_time,
         ];
     }
 }
