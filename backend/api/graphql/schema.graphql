@@ -9,69 +9,69 @@ type Mutation {
   # BookingProvider
 
   createBookingProvider(
-    input: CreateBookingInput!
-  ): Booking!
+    input: CreateBookingProviderInput!
+  ): BookingProvider! @guard(with: ["cognito"])
 
   updateBookingProvider(
     id: ID! @rules(apply: ["required", "string", "uuid"])
-    input: UpdateBookingInput!
-  ): Booking
+    input: UpdateBookingProviderInput!
+  ): BookingProvider @guard(with: ["cognito"])
 
   deleteBookingProvider(
     id: ID! @rules(apply: ["required", "string", "uuid"])
-  ): Booking
+  ): BookingProvider @guard(with: ["cognito"])
 
   deleteBookingProviderCoverImage(
     id: ID! @rules(apply: ["required", "string", "uuid"])
-  ): Booking
+  ): Media @guard(with: ["cognito"])
 
   deleteBookingProviderGalleryImage(
     id: ID! @rules(apply: ["required", "string", "uuid"])
-  ): Booking
+  ): Media @guard(with: ["cognito"])
 
   # Booking
 
   createBooking(
     input: CreateBookingInput!
-  ): Booking! @auth(guards: ["cognito"])
+  ): Booking! @guard(with: ["cognito"])
 
   cancelBooking(
     id: ID! @rules(apply: ["required", "string", "uuid"])
     input: CancelBookingInput!
-  ): Booking
+  ): Booking @guard(with: ["cognito"])
 
   # Service
 
   createService(
     input: CreateServiceInput!
-  ): Service! @auth(guards: ["cognito"])
+  ): Service! @guard(with: ["cognito"])
 
   updateService(
     id: ID! @rules(apply: ["required", "string", "uuid"])
     input: UpdateServiceInput!
-  ): Service
+  ): Service @guard(with: ["cognito"])
 
   # Weekday Schedule
 
   updateWeekdaySchedule(
     id: ID! @rules(apply: ["required", "string", "uuid"])
     input: UpdateWeekdayScheduleInput!
-  ): WeekdaySchedule
+  ): WeekdaySchedule @guard(with: ["cognito"])
 
   # Service Schedule
 
   createServiceSchedule(
     input: CreateServiceScheduleInput!
-  ): ServiceSchedule!
+  ): ServiceSchedule! @guard(with: ["cognito"])
 
   updateServiceSchedule(
     id: ID! @rules(apply: ["required", "string", "uuid"])
     input: UpdateServiceScheduleInput!
-  ): ServiceSchedule
+  ): ServiceSchedule @guard(with: ["cognito"])
 
   deleteServiceSchedule(
     id: ID! @rules(apply: ["required", "string", "uuid"])
-  ): ServiceSchedule
+  ): ServiceSchedule @guard(with: ["cognito"])
 }
 
 input CreateServiceScheduleInput {
@@ -110,13 +110,9 @@ input UpdateServiceInput {
 }
 
 input CreateBookingInput {
-  isActive: Boolean!
-  name: String!
-  email: String!
-  phone: String!
-  website: String
-  address: String!
-  aboutUs: String!
+  date: Date!
+  timeSlot: Int!
+  serviceScheduleId: ID!
 }
 
 input CancelBookingInput {
@@ -124,6 +120,7 @@ input CancelBookingInput {
 }
 
 input CreateBookingProviderInput {
+  isActive: Boolean!
   name: String!
   email: String!
   phone: String!
@@ -134,6 +131,7 @@ input CreateBookingProviderInput {
 }
 
 input UpdateBookingProviderInput {
+  isActive: Boolean!
   name: String!
   email: String!
   phone: String!
@@ -204,7 +202,7 @@ type Booking {
   createdAt: DateTimeUtc! @rename(attribute: "created_at")
   updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
   user: User! @belongsTo(relation: "user")
-  bookingProvider: BookingProvider! @belongsTo(relation: "bookingProvider")
+  serviceSchedule: ServiceSchedule! @belongsTo(relation: "serviceSchedule")
 }
 
 type User {
