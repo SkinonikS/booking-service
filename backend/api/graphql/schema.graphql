@@ -23,10 +23,12 @@ type Mutation {
 
   deleteBookingProviderCoverImage(
     id: ID! @rules(apply: ["required", "string", "uuid"])
+    bookingProviderId: ID! @rules(apply: ["required", "string", "uuid"])
   ): Media @guard(with: ["cognito"])
 
   deleteBookingProviderGalleryImage(
     id: ID! @rules(apply: ["required", "string", "uuid"])
+    bookingProviderId: ID! @rules(apply: ["required", "string", "uuid"])
   ): Media @guard(with: ["cognito"])
 
   # Booking
@@ -41,6 +43,10 @@ type Mutation {
   ): Booking @guard(with: ["cognito"])
 
   # Service
+
+  deleteService(
+    id: ID! @rules(apply: ["required", "string", "uuid"])
+  ): Service @guard(with: ["cognito"])
 
   createService(
     input: CreateServiceInput!
@@ -145,10 +151,12 @@ type Query {
 
   categories: [Category!]! @all
 
+  randomCategories(limit: Int! = 4): [Category!]! @all(builder: "App\\GraphQL\\Queries\\RandomCategories")
+
   serviceDatepicker(
     serviceId: ID! @rules(apply: ["uuid"])
     date: Date!
-  ): [ServiceDatepicker!]! @field(resolver: "App\\GraphQL\\Queries\\BookingProviderDatePicker")
+  ): [ServiceDatepicker!]! @field(resolver: "App\\GraphQL\\Queries\\ServiceDatepicker")
 
   services: [Service!]! @paginate(defaultCount: 10)
 
@@ -166,14 +174,18 @@ type Query {
 
   bookingProviders(
     categories: [ID!]
-  ): [BookingProvider!]! @paginate(defaultCount: 10, builder: "App\\GraphQL\\Queries\\BookingProvider")
+    date: Date @rules(apply: ["date", "after_or_equal:today"])
+  ): [BookingProvider!]! @paginate(defaultCount: 10, builder: "App\\GraphQL\\Queries\\BookingProviders")
 
   bookingProvider(
     id: ID! @eq @rules(apply: ["uuid"])
   ): BookingProvider @find
 
-  # REMOVE THIS LATER
-  users: [User!]! @paginate(defaultCount: 10)
+  randomBookingProviders(limit: Int! = 4): [BookingProvider!]! @all(builder: "App\\GraphQL\\Queries\\RandomBookingProvider")
+
+  bookings(
+    bookingProviderId: ID! @rules(apply: ["required", "string", "uuid"])
+  ): [Booking!]! @guard(with: ["cognito"])
 }
 
 type Media {
@@ -212,6 +224,7 @@ type User {
   createdAt: DateTimeUtc! @rename(attribute: "created_at")
   updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
   bookingProviders: [BookingProvider!]! @hasMany(relation: "bookingProviders")
+  bookings: [Booking!]! @hasMany(relation: "bookings")
 }
 
 type WeekdaySchedule {
@@ -254,7 +267,6 @@ type BookingProvider {
   category: Category! @belongsTo(relation: "category")
   services: [Service!]! @hasMany(relation: "services")
   weekdaySchedules: [WeekdaySchedule!]! @hasMany(relation: "weekdaySchedules")
-  bookings: [Booking!]! @hasMany(relation: "bookings") @orderBy(columns: ["date", "time_slot"])
   galleryImages: [Media] @field(resolver: "App\\GraphQL\\Resolvers\\BookingProvider@galleryImages")
   coverImage: Media @field(resolver: "App\\GraphQL\\Resolvers\\BookingProvider@coverImage")
 }
