@@ -7,7 +7,7 @@ use App\Models\Service;
 use App\Models\WeekdaySchedule;
 use Illuminate\Support\Facades\DB;
 
-class BookingProviderDatePicker
+class ServiceDatepicker
 {
     public function __invoke(null $_, array $args)
     {
@@ -21,6 +21,7 @@ class BookingProviderDatePicker
         $weekdaySchedule = WeekdaySchedule::query()
             ->where('booking_provider_id', $service->booking_provider_id)
             ->where('weekday_id', $date->dayOfWeek)
+            ->where('is_active', true)
             ->first();
 
         $serviceSchedules = $weekdaySchedule->serviceSchedules()
