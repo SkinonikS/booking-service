@@ -64,11 +64,6 @@ class BookingProvider extends Model implements MediableInterface
         return $this->hasMany(Service::class);
     }
 
-    public function bookings(): HasMany
-    {
-        return $this->hasMany(Booking::class);
-    }
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
