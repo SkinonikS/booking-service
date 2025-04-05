@@ -40,6 +40,17 @@ class DatabaseSeeder extends Seeder
                 'about_us' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro voluptatem magni alias at suscipit nam ex quisquam, labore, neque perferendis, quidem natus odit minus praesentium amet et eligendi voluptas in? Voluptas quasi totam sunt ut praesentium, architecto doloribus temporibus consequatur quia? Ipsum optio odio praesentium voluptatibus iusto. Recusandae mollitia nihil accusantium ad, eos temporibus iure dolorem dignissimos laboriosam natus tempora asperiores laudantium incidunt cum aut nesciunt veritatis accusamus nisi modi minima, amet repellendus similique itaque? Asperiores alias ut quod in assumenda dolorum laboriosam explicabo quisquam autem ipsam iusto nam, animi deleniti, velit consectetur ipsum aliquam incidunt. Veritatis debitis beatae delectus!',
             ]);
 
+        foreach (WeekDay::cases() as $weekday) {
+            $bookingProvider
+                ->weekdaySchedules()
+                ->create([
+                    'weekday_id' => $weekday->value,
+                    'is_active' => true,
+                    'open_time' => 420, // 07:00
+                    'close_time' => 1020, // 17:00
+                ]);
+        }
+
         $service = Service::query()
             ->create([
                 'name' => 'Service 1',
