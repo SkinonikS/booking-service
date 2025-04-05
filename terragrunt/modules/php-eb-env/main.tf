@@ -71,9 +71,8 @@ resource "aws_security_group" "asg" {
   }
 }
 
-resource "random_string" "app_key" {
-  length  = 32
-  special = false
+resource "random_id" "app_key" {
+  byte_length = 32
 }
 
 resource "time_static" "curren_time" {}
@@ -178,7 +177,7 @@ resource "aws_elastic_beanstalk_environment" "this" {
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "APP_KEY"
-    value     = random_string.app_key.result
+    value     = "base64:${random_id.app_key.b64_std}"
   }
 
   dynamic "setting" {

@@ -34,6 +34,13 @@ EOF
 
   environment_variables = merge(var.environment_variables, {
     ENV = local.environment
+    # Session
+    NUXT_OIDC_SESSION_SECRET = random_string.oidc_session_secret.result
+    NUXT_AUTH_SESSION_SECRET = random_string.auth_session_secret.result
+    NUXT_OIDC_TOKEN_KEY      = "data:base64,${random_id.oidc_token_key.b64_std}"
+    # Cognito
+    NUXT_OIDC_PROVIDERS_COGNITO_REDIRECT_URI        = "http://localhost:3000" // Temporary
+    NUXT_OIDC_PROVIDERS_COGNITO_LOGOUT_REDIRECT_URI = "http://localhost:3000" // Temporary
   })
 
   tags = {
@@ -53,4 +60,24 @@ resource "aws_amplify_branch" "this" {
   tags = {
     Environment = local.environment
   }
+}
+
+resource "random_id" "oidc_token_key" {
+  byte_length = 32
+}
+
+resource "random_string" "auth_session_secret" {
+  length  = 48
+  special = true
+  upper   = true
+  lower   = true
+  numeric = true
+}
+
+resource "random_string" "oidc_session_secret" {
+  length  = 48
+  special = true
+  upper   = true
+  lower   = true
+  numeric = true
 }

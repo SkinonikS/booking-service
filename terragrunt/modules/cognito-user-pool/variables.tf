@@ -8,24 +8,6 @@ variable "google_client_secret" {
   type        = string
 }
 
-variable "client_callback_urls" {
-  description = "The callback URLs for the web client"
-  type        = list(string)
-  default     = []
-}
-
-variable "client_logout_urls" {
-  description = "The callback URLs for the web client"
-  type        = list(string)
-  default     = []
-}
-
-variable "client_name" {
-  description = "The name of the OAuth2 client"
-  type        = string
-  default     = "cognito-oauth2-client"
-}
-
 variable "environment" {
   description = "The environment name"
   type        = string

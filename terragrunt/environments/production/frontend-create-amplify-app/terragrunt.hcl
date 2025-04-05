@@ -20,6 +20,24 @@ dependency "eb_env" {
   }
 }
 
+dependency "cognito_user_pool" {
+  config_path = "../create-cognito-user-pool"
+
+  mock_outputs = {
+    user_pool_url        = "https://example2.com"
+    user_pool_domain_url = "https://example.com"
+  }
+}
+
+dependency "cognito_user_pool_client" {
+  config_path = "../create-cognito-user-pool-client"
+
+  mock_outputs = {
+    client_id     = "client_id"
+    client_secret = "client_secret"
+  }
+}
+
 inputs = {
   name        = "frontend"
   environment = include.env.locals.environment
@@ -31,7 +49,12 @@ inputs = {
   github_access_token = local.github_access_token
 
   environment_variables = {
-    NUXT_API_BASE_URL = dependency.eb_env.outputs.eb_cname
+    # API
+    NUXT_API_BASE_URL = dependency.eb_env.outputs.eb_cname,
+    # Cognito
+    NUXT_OIDC_PROVIDERS_COGNITO_CLIENT_ID     = dependency.cognito_user_pool_client.outputs.client_id,
+    NUXT_OIDC_PROVIDERS_COGNITO_CLIENT_SECRET = dependency.cognito_user_pool_client.outputs.client_secret,
+    NUXT_OIDC_PROVIDERS_COGNITO_BASE_URL      = dependency.cognito_user_pool.outputs.user_pool_domain_url,
   }
 }
 

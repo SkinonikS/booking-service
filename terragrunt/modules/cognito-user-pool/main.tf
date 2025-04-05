@@ -68,20 +68,4 @@ resource "aws_cognito_user_pool_domain" "this" {
   domain       = lower(replace(aws_cognito_user_pool.this.id, "_", "-"))
 }
 
-resource "aws_cognito_user_pool_client" "this" {
-  name            = var.client_name
-  user_pool_id    = aws_cognito_user_pool.this.id
-  generate_secret = true
-
-  allowed_oauth_flows                  = ["code"]
-  allowed_oauth_flows_user_pool_client = true
-  allowed_oauth_scopes                 = ["email", "openid", "profile"]
-
-  callback_urls                = var.client_callback_urls
-  logout_urls                  = var.client_logout_urls
-  supported_identity_providers = ["COGNITO", "Google"]
-
-  depends_on = [aws_cognito_identity_provider.google]
-}
-
 data "aws_region" "current" {}

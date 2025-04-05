@@ -58,6 +58,24 @@ dependency "s3" {
   }
 }
 
+dependency "cognito_user_pool" {
+  config_path = "../create-cognito-user-pool"
+
+  mock_outputs = {
+    user_pool_url        = "https://example2.com"
+    user_pool_domain_url = "https://example.com"
+  }
+}
+
+dependency "cognito_user_pool_client" {
+  config_path = "../create-cognito-user-pool-client"
+
+  mock_outputs = {
+    client_id     = "client_id"
+    client_secret = "client"
+  }
+}
+
 inputs = {
   eb_application_name = dependency.eb_app.outputs.eb_application_name
 
@@ -71,12 +89,18 @@ inputs = {
 
   environment = include.env.locals.environment
   environment_variables = {
-    APP_DEBUG     = "false"
+    APP_DEBUG = "false"
+    # Database
     DB_CONNECTION = "pgsql"
     DB_HOST       = dependency.rds.outputs.db_host
     DB_PORT       = dependency.rds.outputs.db_port
     DB_DATABASE   = dependency.rds.outputs.db_name
     DB_USERNAME   = dependency.rds.outputs.username
     DB_PASSWORD   = dependency.rds.outputs.password
+    # Cognito
+    AUTH_GUARD                             = "cognito"
+    AUTH_COGNITO_CLIENT_ID                 = dependency.cognito_user_pool_client.outputs.client_id
+    AUTH_COGNITO_USER_POOL_BASE_URL        = dependency.cognito_user_pool.outputs.user_pool_url
+    AUTH_COGNITO_USER_POOL_DOMAIN_BASE_URL = dependency.cognito_user_pool.outputs.user_pool_domain_url
   }
 }
