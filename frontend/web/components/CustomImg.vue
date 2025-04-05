@@ -1,7 +1,7 @@
 <template>
   <Image>
     <template #image>
-      <div ref="imgContainerRef" class="relative" :style="imgContainerStyles">
+      <div ref="imgContainerRef" :class="['relative overflow-hidden', props.class]" :style="[{ width: props.width, height: props.height, aspectRatio: props.aspectRatio }, props.style]">
         <template v-if="state === 'pending'">
           <slot name="placeholder">
             <div class="flex items-center justify-center h-[inherit]">
@@ -22,7 +22,7 @@
           </slot>
         </template>
         <template v-else>
-          <img :src="imgSrc" :sizes="props.sizes" :style="imgStyles" loading="lazy">
+          <img :src="imgSrc" :sizes="props.sizes" :style="{ objectFit: props.objectFit, objectPosition: props.objectPosition, width: 'inherit', height: 'inherit', margin: 'auto' }" >
           <div v-if="$slots.default" class="absolute inset-0">
             <slot />
           </div>
@@ -37,18 +37,26 @@ export type State = 'pending' | 'ready' | 'error';
 export type ObjectFit = 'cover' | 'fill' | 'contain' | 'none' | 'scale-down';
 
 export type Props = {
+  class?: string;
+  style?: string;
   height?: string;
   width?: string;
   src: string;
   sizes?: string;
   objectFit?: ObjectFit;
+  objectPosition?: string;
+  aspectRatio?: number;
 };
 
 const props = withDefaults(defineProps<Props>(), {
+  class: '',
+  style: '',
   sizes: undefined,
   height: 'auto',
   width: 'auto',
+  objectPosition: 'center',
   objectFit: 'cover',
+  aspectRatio: 16 / 9,
 });
 
 const imgSrc = ref('');
@@ -69,18 +77,6 @@ if (! intersectionObserver.isSupported) {
   imgSrc.value = props.src;
   state.value = 'ready';
 }
-
-const imgContainerStyles = computed(() => ({
-  width: props.width,
-  height: props.height,
-}));
-
-const imgStyles = computed(() => ({
-  objectFit: props.objectFit,
-  width: 'inherit',
-  height: 'inherit',
-  margin: 'auto',
-}));
 
 const preloadImage = (): HTMLImageElement => {
   const img = new Image();

@@ -1,6 +1,9 @@
 declare module 'nuxt/schema' {
-  interface RuntimeConfig {
-    api: {
+  interface PublicRuntimeConfig {
+    graphql: {
+      baseUrl: string;
+    };
+    media: {
       baseUrl: string;
     };
   }

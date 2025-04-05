@@ -1,8 +1,10 @@
-import Default from './primevue/presets/default';
 import tailwindcss from '@tailwindcss/vite';
+import Default from './primevue/presets/default';
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
+
+  ssr: true,
 
   devtools: {
     enabled: true,
@@ -18,7 +20,20 @@ export default defineNuxtConfig({
     'nuxt-security',
     'nuxt-oidc-auth',
     '@nuxtjs/i18n',
+    '@pinia/nuxt',
+    '@vee-validate/nuxt',
+    'nuxt-graphql-request',
   ],
+
+  veeValidate: {
+    autoImports: true,
+    componentNames: {
+      Form: 'VeeForm',
+      Field: 'VeeField',
+      FieldArray: 'VeeFieldArray',
+      ErrorMessage: 'VeeErrorMessage',
+    },
+  },
 
   fonts: {
     experimental: {
@@ -27,7 +42,7 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    strategy: 'prefix',
+    strategy: 'no_prefix',
     defaultLocale: 'en',
     lazy: true,
     locales: [
@@ -50,6 +65,9 @@ export default defineNuxtConfig({
     experimental: {
       localeDetector: 'localeDetector.ts',
     },
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
 
   vite: {
@@ -65,6 +83,10 @@ export default defineNuxtConfig({
         base: './.cache/oidc',
       },
     },
+  },
+
+  pinia: {
+    storesDirs: ['./stores/**'],
   },
 
   oidc: {
@@ -84,11 +106,17 @@ export default defineNuxtConfig({
     provideDefaultSecrets: false,
   },
 
+  graphql: {
+    clients: {
+      default: {
+        endpoint: 'http://localhost/graphql',
+      },
+    },
+  },
+
   security: {
     headers: {
-      contentSecurityPolicy: {
-        'img-src': ['https://placehold.co/', 'https://cdn.dummyjson.com', 'self'], // TODO: temporary
-      },
+      contentSecurityPolicy: false,
     },
     csrf: {
       enabled: true,
@@ -102,14 +130,14 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    api: {
-      baseUrl: '',
+    public: {
+      graphql: {
+        baseUrl: '',
+      },
+      media: {
+        baseUrl: '',
+      },
     },
-    oidc_secrets: {
-      oidc_session_secret: process.env.NUXT_OIDC_SESSION_SECRET || '',
-      oidc_token_key: process.env.NUXT_OIDC_TOKEN_KEY || '',
-      oidc_auth_session_secret: process.env.NUXT_OIDC_AUTH_SESSION_SECRET || '',
-    }
   },
 
   watch: [
