@@ -27,6 +27,7 @@ class UpdateServiceSchedule
             'close_time' => $validated['closeTime'],
             'max_bookings' => $validated['maxBookings'],
             'time_span' => $validated['timeSpan'],
+            'is_active' => $validated['isActive'],
         ]);
 
         return $serviceSchedule;
@@ -39,6 +40,7 @@ class UpdateServiceSchedule
             'closeTime' => ['required', 'integer', 'min:0', 'max:1440', 'gte:openTime'],
             'maxBookings' => ['required', 'integer', 'min:1', 'max:255'],
             'timeSpan' => ['required', 'integer', 'min:1', 'max:1440'],
+            'isActive' => ['required', 'boolean'],
         ])->after(function (ValidationValidator $validator) use ($serviceSchedule) {
             if ($validator->errors()->hasAny(['openTime', 'closeTime', 'timeSpan'])) {
                 return;

@@ -41,7 +41,7 @@ class UpdateBookingProvider
             'email' => ['required', 'email', 'max:64'],
             'phone' => ['required', 'string', 'min:10', 'max:15'],
             'address' => ['required', 'string', 'min:4', 'max:64'],
-            'website' => ['required', 'string', 'min:4', 'max:32'],
+            'website' => ['nullable', 'string', 'url'],
             'aboutUs' => ['required', 'string', 'min:4', 'max:2048'],
         ]);
 

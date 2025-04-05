@@ -12,7 +12,7 @@ class DeleteBookingProviderCoverImage
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
-        $bookingProvider = BookingProvider::query()->findOrFail($args['id']);
+        $bookingProvider = BookingProvider::query()->findOrFail($args['bookingProviderId']);
 
         $this->authorize('delete', $bookingProvider);
 
