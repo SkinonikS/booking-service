@@ -17,6 +17,19 @@ class BookingProviderPolicy
         return Response::allow();
     }
 
+    public function view(?User $user, BookingProvider $bookingProvider)
+    {
+        if (! $user) {
+            return Response::deny('You must be logged in to view the booking provider.');
+        }
+
+        if ($bookingProvider->user_id === $user->getKey()) {
+            return Response::allow();
+        }
+
+        return Response::denyAsNotFound();
+    }
+
     public function update(?User $user, BookingProvider $bookingProvider)
     {
         if (! $user) {
