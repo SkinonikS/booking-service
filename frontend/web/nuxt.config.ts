@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vee-validate/nuxt',
     'nuxt-graphql-request',
+    '@vite-pwa/nuxt',
   ],
 
   veeValidate: {

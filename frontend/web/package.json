@@ -28,6 +28,7 @@
     "@types/qs": "^6.9.18",
     "@vee-validate/nuxt": "^4.15.0",
     "@vee-validate/yup": "^4.15.0",
+    "@vite-pwa/nuxt": "1.0.0",
     "@vueuse/components": "^13.0.0",
     "@vueuse/core": "^13.0.0",
     "@vueuse/nuxt": "^13.0.0",
