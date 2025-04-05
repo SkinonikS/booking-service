@@ -18,6 +18,7 @@ class CreateServiceSchedule
         $validated = $this->validate($args['input']);
 
         $serviceSchedule = ServiceSchedule::query()->create([
+            'is_active' => $validated['isActive'],
             'weekday_schedule_id' => $validated['weekdayScheduleId'],
             'service_id' => $validated['serviceId'],
             'open_time' => $validated['openTime'],
@@ -32,6 +33,7 @@ class CreateServiceSchedule
     protected function validate(array $input): array
     {
         $validator = Validator::make($input, [
+            'isActive' => ['required', 'boolean'],
             'weekdayScheduleId' => ['required', 'string', 'uuid'],
             'serviceId' => ['required', 'string', 'uuid'],
             'openTime' => ['required', 'integer', 'min:0', 'max:1440'],
