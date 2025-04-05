@@ -4,8 +4,6 @@ import Default from './primevue/presets/default';
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
 
-  ssr: true,
-
   devtools: {
     enabled: true,
   },
@@ -26,6 +24,14 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
   ],
 
+  app: {
+    head: {
+      link: [
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon-180x180.png' },
+      ],
+    },
+  },
+
   veeValidate: {
     autoImports: true,
     componentNames: {
@@ -39,6 +45,42 @@ export default defineNuxtConfig({
   fonts: {
     experimental: {
       processCSSVariables: true,
+    },
+  },
+
+  pwa: {
+    registerType: 'autoUpdate',
+    registerWebManifestInRouteRules: true,
+    manifest: {
+      name: 'YourNameHere',
+      short_name: 'YourNameHere',
+      description: 'YourNameHere description',
+      icons: [
+        {
+          src: 'pwa-64x64.png',
+          sizes: '64x64',
+          type: 'image/png',
+        },
+        {
+          src: 'pwa-192x192.png',
+          sizes: '192x192',
+          type: 'image/png',
+        },
+        {
+          src: 'pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+        },
+        {
+          src: 'maskable-icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable',
+        },
+      ],
+    },
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
     },
   },
 

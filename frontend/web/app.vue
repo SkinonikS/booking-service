@@ -1,4 +1,5 @@
 <template>
+  <NuxtPwaManifest />
   <NuxtLoadingIndicator :throttle="0" />
   <NuxtLayout>
     <NuxtPage />
