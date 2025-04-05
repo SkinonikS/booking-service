@@ -4,32 +4,43 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\BookingProvider;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Plank\Mediable\Facades\MediaUploader;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BookingProviderGalleryController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __invoke(Request $request, BookingProvider $bookingProvider)
     {
-        $request->validate([
-            'images' => 'required|array|max:6',
-            'images.*' => 'image|max:2048',
-        ]);
+        $this->authorize('update', $bookingProvider);
 
-        $images = [];
-        foreach ($request->file('images') as $file) {
-            $media = MediaUploader::fromSource($file)
-                ->onDuplicateReplace()
-                ->setAllowedAggregateTypes(['image'])
-                ->useHashForFilename()
-                ->toDestination('public', "booking-providers/gallery/{$bookingProvider->getKey()}")
-                ->upload();
+        $galleryCount = $bookingProvider->media()
+            ->where('tag', 'gallery')
+            ->count();
 
-            $images[] = $media->getKey();
+        if ($galleryCount >= 12) {
+            throw new HttpException(422, 'Booking provider already has a gallery image.');
         }
 
-        $bookingProvider->attachMedia($images, 'gallery');
+        $request->validate([
+            'image' => 'required|image',
+        ]);
 
-        return response()->noContent();
+        $media = MediaUploader::fromSource($request->file('image'))
+            ->onDuplicateReplace()
+            ->setAllowedAggregateTypes(['image'])
+            ->useHashForFilename()
+            ->toDestination('public', "booking-providers/gallery/{$bookingProvider->getKey()}")
+            ->upload();
+
+        $bookingProvider->attachMedia($media, 'gallery');
+
+        return [
+            'id' => $media->getKey(),
+            'fullUrl' => $media->getUrl(),
+        ];
     }
 }

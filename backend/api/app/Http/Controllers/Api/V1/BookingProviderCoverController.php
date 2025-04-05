@@ -4,15 +4,29 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\BookingProvider;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Plank\Mediable\Facades\MediaUploader;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BookingProviderCoverController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __invoke(Request $request, BookingProvider $bookingProvider)
     {
+        $this->authorize('update', $bookingProvider);
+
+        $coversCount = $bookingProvider->media()
+            ->where('tag', 'cover')
+            ->count();
+
+        if ($coversCount >= 1) {
+            throw new HttpException(422, 'Booking provider already has a cover image.');
+        }
+
         $request->validate([
-            'image' => 'required|image|max:2048',
+            'image' => 'required|image',
         ]);
 
         $media = MediaUploader::fromSource($request->file('image'))
@@ -24,6 +38,9 @@ class BookingProviderCoverController extends Controller
 
         $bookingProvider->attachMedia($media, 'cover');
 
-        return response()->noContent();
+        return [
+            'id' => $media->getKey(),
+            'fullUrl' => $media->getUrl(),
+        ];
     }
 }
