@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Shared\Cognito\HasCognitoInterface;
 use App\Shared\Cognito\HasCognitoTrait;
+use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -33,7 +34,35 @@ class User extends Authenticatable implements HasCognitoInterface
         'cognito_id',
         'name',
         'email',
+        'is_verified',
     ];
+
+    public static function booted(): void
+    {
+        static::updated(function (self $user) {
+            if (! $user->isDirty('is_verified')) {
+                return;
+            }
+
+            app(CognitoIdentityProviderClient::class)->adminUpdateUserAttributes([
+                'UserPoolId' => config('aws.cognito_identity_provider_client.user_pool_id'),
+                'Username' => $user->cognito_id,
+                'UserAttributes' => [
+                    [
+                        'Name' => 'custom:is_verified',
+                        'Value' => $user->is_verified ? 'true' : 'false',
+                    ],
+                ],
+            ]);
+        });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'is_verified' => 'boolean',
+        ];
+    }
 
     public function bookingProviders(): HasMany
     {

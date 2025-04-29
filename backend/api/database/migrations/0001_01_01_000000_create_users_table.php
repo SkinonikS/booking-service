@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('cognito_id')->unique();
             $table->string('name');
             $table->string('email')->unique();
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
         });
     }
