@@ -4,3 +4,7 @@ export const convertMinutesForHumans = (minutes: number): string => {
 
   return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 };
+
+export const getFormattedTimeRange = (openTime: number, closeTime: number, delimiter: string = ' - ') => {
+  return `${convertMinutesForHumans(openTime)}${delimiter}${convertMinutesForHumans(closeTime)}`;
+};

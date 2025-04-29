@@ -10,5 +10,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     $graphql.default.setHeaders({ Authorization: `Bearer ${user.value.idToken}` });
   }
 
-  $graphql.default.setEndpoint(`${runtimeConfig.public.graphql.baseUrl}/graphql`);
+  $graphql.default.setEndpoint(runtimeConfig.public.graphql.apiUrl);
 });

@@ -1,14 +1,14 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
         <template #title>{{ $t('management.pages.servicesEdit.title') }}</template>
         <template #subtitle>{{ $t('management.pages.servicesEdit.description') }}</template>
         <template #content>
-          <ManagementFormEditService ref="formRef" :disabled="status === 'pending'" @submit="submitForm" @reset="handleReset" />
+          <ManagementFormEditService ref="formRef" :disabled="status === 'pending'" @submit="updateService" />
         </template>
         <template #footer>
-          <FormControls :loading="loading" :disabled="meta.dirty || status === 'pending'" @reset="formRef?.reset()" @submit="formRef?.requestSubmit()">
+          <BaseFormControls :loading="loading" :disabled="meta.dirty || status === 'pending'" @reset="handleReset()" @submit="formRef?.requestSubmit()">
             <template #before>
               <div class="grow" />
               <Button v-wave text :label="$t('common.delete')" severity="danger" @click="deleteService()">
@@ -17,21 +17,17 @@
                 </template>
               </Button>
             </template>
-          </FormControls>
+          </BaseFormControls>
         </template>
       </Card>
     </div>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import { gql } from 'nuxt-graphql-request/utils';
 import * as yup from 'yup';
-import type { Service } from '~/types/models';
-
-export interface GraphqlResponse {
-  service: Service;
-}
+import { GET_SERVICE, UPDATE_SERVICE, DELETE_SERVICE } from '~/graphql/management/services/edit-page';
+import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
@@ -49,48 +45,36 @@ const route = useRoute();
 const formRef = useTemplateRef('formRef');
 const toast = useToast();
 
-const { data: service, status } = await useAsyncData(async () => {
-  const { service } = await $graphql.default.request<GraphqlResponse>(gql`
-    query service($serviceId: ID!) {
-      service(id: $serviceId) {
-        id
-        name
-        description
-      }
-    }
-  `, {
+const { data, status } = await useAsyncData(() => {
+  return $graphql.default.request(graphql(/* GraphQL */ GET_SERVICE), {
     serviceId: route.params.serviceId.toString(),
   });
-
-  return service;
 });
 
-if (! service.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Service not found' });
+if (! data.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Service not found', fatal: true });
 }
+
+useSeoMeta({
+  title: `Edit ${data.value?.service?.name}`,
+});
 
 const { handleSubmit, handleReset, meta } = useForm({
   initialValues: {
-    name: service.value.name,
-    description: service.value.description,
+    name: data.value?.service?.name,
+    description: data.value?.service?.description,
   },
   validationSchema: toTypedSchema(yup.object({
     name: yup.string().required().min(3).label('Name'),
-    description: yup.string().optional().label('Description'),
+    description: yup.string().nullable().label('Description'),
   })),
 });
 
-const submitForm = handleSubmit(async (values) => {
+const updateService = handleSubmit(async (values) => {
   loading.value = true;
 
   try {
-    await $graphql.default.request(gql`
-      mutation updateService($id: ID!, $name: String!, $description: String!) {
-        updateService(id: $id, input: { name: $name, description: $description }) {
-          id
-        }
-      }
-    `, {
+    await $graphql.default.request(graphql(/* GraphQL */ UPDATE_SERVICE), {
       id: route.params.serviceId.toString(),
       name: values.name,
       description: values.description,
@@ -118,13 +102,7 @@ const deleteService = async () => {
   loading.value = true;
 
   try {
-    await $graphql.default.request(gql`
-      mutation deleteService($id: ID!) {
-        deleteService(id: $id) {
-          id
-        }
-      }
-    `, {
+    await $graphql.default.request(graphql(/* GraphQL */ DELETE_SERVICE), {
       id: route.params.serviceId.toString(),
     });
 

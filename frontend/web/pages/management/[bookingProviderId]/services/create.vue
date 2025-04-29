@@ -1,30 +1,34 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
         <template #title>{{ $t('management.pages.servicesCreate.title') }}</template>
         <template #subtitle>{{ $t('management.pages.servicesCreate.description') }}</template>
         <template #content>
-          <ManagementFormCreateService ref="formRef" :disabled="loading" @submit="submitForm" @reset="handleReset" />
+          <ServiceCreateForm ref="formRef" :disabled="loading" @submit="submitForm" />
         </template>
         <template #footer>
-          <FormControls :loading="loading" :disabled="meta.dirty" @reset="formRef?.reset()" @submit="formRef?.requestSubmit()" />
+          <BaseFormControls :loading="loading" :disabled="meta.dirty" @reset="handleReset()" @submit="formRef?.requestSubmit()" />
         </template>
       </Card>
     </div>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import { gql } from 'nuxt-graphql-request/utils';
 import * as yup from 'yup';
-import BookingProviderId from '~/pages/booking-providers/[bookingProviderId].vue';
+import { CREATE_SERVICE } from '~/graphql/management/services/create-page';
+import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
   validate: (route) => yup.object({
     bookingProviderId: yup.string().required().uuid(),
   }).isValidSync(route.params),
+});
+
+useSeoMeta({
+  title: 'Create service',
 });
 
 const loading = ref(false);
@@ -40,13 +44,7 @@ const submitForm = handleSubmit(async (values) => {
   loading.value = true;
 
   try {
-    await $graphql.default.request(gql`
-      mutation createService($bookingProviderId: ID!, $name: String!, $description: String!) {
-        createService(input: { name: $name, description: $description, bookingProviderId: $bookingProviderId }) {
-          id
-        }
-      }
-    `, {
+    await $graphql.default.request(graphql(/* GraphQL */ CREATE_SERVICE), {
       bookingProviderId: route.params.bookingProviderId.toString(),
       name: values.name,
       description: values.description,

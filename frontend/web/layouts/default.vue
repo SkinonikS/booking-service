@@ -1,13 +1,16 @@
 <template>
-  <PageRoot>
-    <DefaultLayoutHeader class="row-span-1" />
-    <PageMain class="row-span-1">
+  <BasePageRoot>
+    <LayoutDefaultHeader />
+    <BasePageMain class="row-span-1">
       <slot />
-    </PageMain>
-    <PageFooter class="row-span-1" />
-  </PageRoot>
+    </BasePageMain>
+    <BasePageFooter class="row-span-1">
+      <template #select>
+        <LayoutLocaleSwitcher />
+      </template>
+    </BasePageFooter>
+  </BasePageRoot>
+  <LayoutDefaultDrawer />
   <DynamicDialog />
-  <DefaultLayoutDrawer />
   <Toast />
 </template>
-

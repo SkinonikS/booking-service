@@ -1,10 +1,10 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <Card>
       <template #title>{{ $t('management.pages.weekdaySchedules.title') }}</template>
       <template #subtitle>{{ $t('management.pages.weekdaySchedules.description') }}</template>
       <template #content>
-        <DataTable :value="bookingProvider?.weekdaySchedules ?? []" :loading="status === 'pending'">
+        <DataTable :value="data?.bookingProvider?.weekdaySchedules ?? []" :loading="status === 'pending'">
           <Column name="weekday" :header="$t('common.weekday')">
             <template #body="{ data: item }">
               <span>{{ $t(`weekdays.${item.weekday}`) }}</span>
@@ -29,7 +29,7 @@
           </Column>
           <Column name="actions" body-style="text-align: right">
             <template #body="{ data: item }">
-              <Button v-wave v-tooltip.top="$t('common.edit')" text rounded @click="editWeekdaySchedule(item.id)">
+              <Button v-wave v-tooltip.top="$t('common.edit')" text rounded @click="viewWeekdaySchedule(item.id)">
                 <template #icon>
                   <Icon name="mdi:pencil" />
                 </template>
@@ -39,21 +39,14 @@
         </DataTable>
       </template>
     </Card>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash';
-import { gql } from 'nuxt-graphql-request/utils';
+import { graphql } from '~/utils/graphql';
+import { GET_WEEKDAYS_SCHEDULES } from '~/graphql/management/weekday-schedules/index-page';
 import * as yup from 'yup';
-import type { WeekdaySchedule } from '~/types/models';
 import { convertMinutesForHumans } from '~/utils/time';
-
-interface GraphqlResponse {
-  bookingProvider: {
-    weekdaySchedules: Pick<WeekdaySchedule, 'id' | 'weekday' | 'openTime' | 'closeTime' | 'isActive'>[];
-  };
-}
 
 definePageMeta({
   layout: 'management',
@@ -62,35 +55,25 @@ definePageMeta({
   }).isValid(route.params),
 });
 
+useSeoMeta({
+  title: 'Weekday schedules',
+});
+
 const { $graphql } = useNuxtApp();
 const localeRoute = useLocaleRoute();
 const route = useRoute();
 
-const { data: bookingProvider, status } = await useAsyncData(async () => {
-  const { bookingProvider } = await $graphql.default.request<GraphqlResponse>(gql`
-    query weekdaySchedules($bookingProviderId: ID!) {
-      bookingProvider(id: $bookingProviderId) {
-        weekdaySchedules {
-          id
-          weekday
-          openTime
-          closeTime
-          isActive
-        }
-      }
-    }
-  `, {
-    bookingProviderId: route.params.bookingProviderId,
+const { data, status } = await useAsyncData(async () => {
+  return $graphql.default.request(graphql(/* GraphQL */ GET_WEEKDAYS_SCHEDULES), {
+    bookingProviderId: route.params.bookingProviderId.toString(),
   });
-
-  return bookingProvider;
 });
 
-if (! bookingProvider.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
+if (! data.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found', fatal: true });
 }
 
-const editWeekdaySchedule = async (weekdayScheduleId: string) => {
+const viewWeekdaySchedule = async (weekdayScheduleId: string) => {
   const localeRoutePath = localeRoute({
     name: 'management-bookingProviderId-weekday-schedules-weekdayScheduleId-edit',
     params: { weekdayScheduleId },

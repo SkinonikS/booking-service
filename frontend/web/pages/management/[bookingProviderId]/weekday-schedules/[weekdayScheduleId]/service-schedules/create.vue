@@ -1,32 +1,25 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>{{ $t('management.pages.serviceSchedultCreate.title') }}</template>
-        <template #subtitle>{{ $t('management.pages.serviceSchedultCreate.description') }}</template>
+        <template #title>{{ $t('management.pages.serviceScheduleCreate.title') }}</template>
+        <template #subtitle>{{ $t('management.pages.serviceScheduleCreate.description') }}</template>
         <template #content>
-          <ManagementFormCreateServiceSchedule ref="formRef" :service-options="serviceOptions" :weekday-schedule-id="($route.params.weekdayScheduleId as string)" :disabled="status === 'pending' || loading" @submit="submitForm"  @reset="handleReset" />
+          <ServiceScheduleCreateForm ref="formRef" :services="services" :disabled="status === 'pending' || loading" @submit="createServiceSchedule" />
         </template>
         <template #footer>
-          <FormControls :disabled="meta.dirty" :loading="status === 'pending' || loading" @submit="formRef?.requestSubmit()" @reset="formRef?.reset()" />
+          <BaseFormControls :disabled="meta.dirty" :loading="status === 'pending' || loading" @reset="handleReset()" @submit="formRef?.requestSubmit()" />
         </template>
       </Card>
     </div>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import { gql } from 'nuxt-graphql-request/utils';
+import _ from 'lodash';
 import * as yup from 'yup';
-import type { Service, WeekdaySchedule } from '~/types/models';
-
-export interface GraphqlResponse {
-  weekdaySchedule: Pick<WeekdaySchedule, 'id' | 'openTime' | 'closeTime' | 'isActive'> & {
-    bookingProvider: {
-      services: Pick<Service, 'id' | 'name'>[];
-    };
-  };
-}
+import { CREATE_SERVICE_SCHEDULE, GET_WEEKDAY_SCHEDULE } from '~/graphql/management/weekday-schedules/service-schedules/create-page';
+import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
@@ -44,31 +37,22 @@ const { $graphql } = useNuxtApp();
 const formRef = useTemplateRef('formRef');
 const toast = useToast();
 
-const { data: weekdaySchedule, status } = await useAsyncData(async () => {
-  const { weekdaySchedule } = await $graphql.default.request<GraphqlResponse>(gql`
-    query weekdaySchedule($id: ID!) {
-      weekdaySchedule(id: $id) {
-        openTime
-        closeTime
-        bookingProvider {
-          services {
-            id
-            name
-          }
-        }
-      }
-    }
-  `, { id: route.params.weekdayScheduleId.toString() });
-
-  return weekdaySchedule;
+const { data, status } = await useAsyncData(() => {
+  return $graphql.default.request(graphql(/* GraphQL */ GET_WEEKDAY_SCHEDULE), {
+    id: route.params.weekdayScheduleId.toString(),
+  });
 });
 
-const serviceOptions = computed(() => {
-  if (! weekdaySchedule.value) {
+useSeoMeta({
+  title: 'Create service schedule',
+});
+
+const services = computed(() => {
+  if (! data.value) {
     return [];
   }
 
-  return weekdaySchedule.value?.bookingProvider?.services.map((service) => ({
+  return _.map(data.value?.weekdaySchedule?.bookingProvider?.services, (service) => ({
     value: service.id,
     label: service.name,
   }));
@@ -79,22 +63,20 @@ const validationSchema = computed(() => toTypedSchema(yup.object({
   maxBookings: yup.number().required().min(1).max(255).label('Max bookings'),
   timeSpan: yup.number().required().min(1).label('Time span'),
   serviceId: yup.string().required().uuid().label('Service'),
-
-  openTime: yup.number().integer().min(0).max(1439).test({
+  openTime: yup.number().integer().required().min(0).max(1439).test({
     name: 'not-less-than-close-time',
     test: (value, ctx) => {
       return value === undefined || value < ctx.parent.closeTime;
     },
     message: ({ label }) => `${label} must be earlier than closing time`,
-  }).label('Open time').timeBounded(weekdaySchedule.value?.openTime ?? 0, weekdaySchedule.value?.closeTime ?? 0),
-
-  closeTime: yup.number().integer().min(0).max(1439).test({
+  }).label('Open time').timeBounded(data.value?.weekdaySchedule?.openTime ?? 0, data.value?.weekdaySchedule?.closeTime ?? 0),
+  closeTime: yup.number().integer().required().min(0).max(1439).test({
     name: 'not-grater-than-open-time',
     test: (value, ctx) => {
       return value === undefined || value > ctx.parent.openTime;
     },
     message: ({ label }) => `${label} must be later than opening time`,
-  }).label('Close time').timeBounded(weekdaySchedule.value?.openTime ?? 0, weekdaySchedule.value?.closeTime ?? 0),
+  }).label('Close time').timeBounded(data.value?.weekdaySchedule?.openTime ?? 0, data.value?.weekdaySchedule?.closeTime ?? 0),
 })));
 
 const { meta, handleReset, handleSubmit } = useForm({
@@ -109,25 +91,11 @@ const { meta, handleReset, handleSubmit } = useForm({
   validationSchema,
 });
 
-const submitForm = handleSubmit(async (values) => {
+const createServiceSchedule = handleSubmit(async (values) => {
   loading.value = true;
 
   try {
-    await $graphql.default.request(gql`
-      mutation createServiceSchedule($weekdayScheduleId: ID!, $serviceId: ID!, $isActive: Boolean!, $openTime: Int!, $closeTime: Int!, $maxBookings: Int!, $timeSpan: Int!) {
-        createServiceSchedule(input: {
-          weekdayScheduleId: $weekdayScheduleId,
-          serviceId: $serviceId,
-          isActive: $isActive,
-          openTime: $openTime,
-          closeTime: $closeTime,
-          maxBookings: $maxBookings,
-          timeSpan: $timeSpan
-        }) {
-          id
-        }
-      }
-    `, {
+    await $graphql.default.request(graphql(/* GraphQL */ CREATE_SERVICE_SCHEDULE), {
       weekdayScheduleId: route.params.weekdayScheduleId.toString(),
       serviceId: values.serviceId,
       isActive: values.isActive,
@@ -139,12 +107,7 @@ const submitForm = handleSubmit(async (values) => {
 
     toast.add({ summary: 'Service schedule created successfully', severity: 'success' });
 
-    const localeRoutePath = localeRoute({
-      name: 'management-bookingProviderId-weekday-schedules-weekdayScheduleId-edit',
-      params: { weekdayScheduleId: route.params.weekdayScheduleId },
-    });
-
-    await navigateTo(localeRoutePath ?? '/');
+    await redirectBack();
   } catch (e) {
     if (e instanceof Error) {
       toast.add({ summary: e.message, severity: 'error' });
@@ -155,4 +118,16 @@ const submitForm = handleSubmit(async (values) => {
     loading.value = false;
   }
 });
+
+const redirectBack = async () => {
+  const localeRoutePath = localeRoute({
+    name: 'management-bookingProviderId-weekday-schedules-weekdayScheduleId-edit',
+    params: {
+      bookingProviderId: route.params.bookingProviderId,
+      weekdayScheduleId: route.params.weekdayScheduleId,
+    },
+  });
+
+  await navigateTo(localeRoutePath ?? '/');
+};
 </script>

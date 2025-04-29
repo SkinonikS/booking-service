@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
 
   devtools: {
-    enabled: true,
+    enabled: false,
   },
 
   modules: [
@@ -80,7 +80,48 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      globPatterns: ['**/*.{js,css,html,svg,png,ico,json,woff2,woff,ttf,eot}'],
+      clientsClaim: true,
+      cleanupOutdatedCaches: true,
+      skipWaiting: true,
+      // runtimeCaching: [
+      //   {
+      //     urlPattern: ({ request, url }) => {
+      //       if (url.pathname.startsWith('/auth/')) {
+      //         return false;
+      //       }
+
+      //       return request.mode === 'navigate';
+      //     },
+      //     handler: 'NetworkFirst',
+      //     options: {
+      //       cacheName: 'pages-cache',
+      //       networkTimeoutSeconds: 3,
+      //       cacheableResponse: {
+      //         statuses: [0, 200],
+      //       },
+      //     },
+      //   },
+      //   {
+      //     urlPattern: ({ url }) => {
+      //       return url.pathname === '/api/_nuxt_icon/mdi.json';
+      //     },
+      //     handler: 'CacheFirst',
+      //     options: {
+      //       cacheName: 'nuxt-icons-cache',
+      //       expiration: {
+      //         maxEntries: 200,
+      //         maxAgeSeconds: 60 * 60 * 24 * 30,
+      //       },
+      //       cacheableResponse: {
+      //         statuses: [0, 200],
+      //       },
+      //     },
+      //   },
+      // ],
+    },
+    client: {
+      installPrompt: true,
     },
   },
 
@@ -93,11 +134,6 @@ export default defineNuxtConfig({
         code: 'en',
         name: 'English',
         file: 'en.ts',
-      },
-      {
-        code: 'ru',
-        name: 'Русский',
-        file: 'ru.ts',
       },
     ],
     detectBrowserLanguage: {
@@ -175,10 +211,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       graphql: {
-        baseUrl: '',
+        apiUrl: process.env.NUXT_PUBLIC_GRAPHQL_API_URL || '',
       },
-      media: {
-        baseUrl: '',
+      fileUpload: {
+        baseUrl: process.env.NUXT_PUBLIC_FILE_UPLOAD_BASE_URL || '',
       },
     },
   },
@@ -189,6 +225,7 @@ export default defineNuxtConfig({
 
   icon: {
     mode: 'svg',
+    serverBundle: 'remote',
   },
 
   css: [

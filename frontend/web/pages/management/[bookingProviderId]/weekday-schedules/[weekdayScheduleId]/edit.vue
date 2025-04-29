@@ -1,25 +1,27 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>{{ $t('management.pages.weekdaySchedulesEdit.title') }}</template>
-        <template #subtitle>{{ $t('management.pages.weekdaySchedulesEdit.description') }}</template>
+        <template #title>Edit weekly schedule</template>
+        <template #subtitle>Update the details of your weekly schedule.</template>
         <template #content>
-          <ManagementFormEditWeekdaySchedule ref="formRef" :disabled="status === 'pending' || loading" @reset="handleReset" @submit="submitForm" />
+          <WeekdayScheduleEditForm ref="formRef" :disabled="status === 'pending' || loading" @submit="editWeekdaySchedule" />
         </template>
         <template #footer>
-          <FormControls :loading="status === 'pending' || loading" :disabled="meta.dirty" @reset="formRef?.reset()" @submit="formRef?.requestSubmit()" />
+          <BaseFormControls :loading="status === 'pending' || loading" :disabled="meta.dirty" @reset="handleReset()" @submit="formRef?.requestSubmit()" />
         </template>
       </Card>
       <Card>
-        <template #title>{{ $t('management.pages.weekdaySchedulesServices.title') }}</template>
-        <template #subtitle>{{ $t('management.pages.weekdaySchedulesServices.description') }}</template>
+        <template #title>Service schedules</template>
+        <template #subtitle>Manage service schedules.</template>
         <template #content>
-          <ManagementTableServices :weekday-schedule-id="weekdaySchedule?.id" />
+          <template v-if="status === 'success'">
+            <ServiceScheduleSection :weekday-schedule-id="(data?.weekdaySchedule?.id) as unknown as string" />
+          </template>
         </template>
         <template #footer>
           <div class="flex flex-row-reverse">
-            <Button v-wave :label="$t('common.addServiceSchedule')" @click="createServiceSchedule">
+            <Button v-wave label="Add service schedule" @click="createServiceSchedule">
               <template #icon>
                 <Icon name="mdi:plus" />
               </template>
@@ -28,18 +30,14 @@
         </template>
       </Card>
     </div>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/yup';
-import { gql } from 'nuxt-graphql-request/utils';
 import * as yup from 'yup';
-import type { WeekdaySchedule } from '~/types/models';
-
-export interface GraphqlResponse {
-  weekdaySchedule: Pick<WeekdaySchedule, 'id' | 'openTime' | 'closeTime' | 'isActive'>;
-}
+import { GET_WEEKDAY_SCHEDULE, UPDATE_WEEKDAY_SCHEDULE } from '~/graphql/management/weekday-schedules/edit-page';
+import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
@@ -57,56 +55,42 @@ const route = useRoute();
 const toast = useToast();
 const formRef = useTemplateRef('formRef');
 
-const { data: weekdaySchedule, status } = await useAsyncData(async () => {
-  const { weekdaySchedule } = await $graphql.default.request<GraphqlResponse>(gql`
-    query weekdaySchedule($id: ID!) {
-      weekdaySchedule(id: $id) {
-        id
-        isActive
-        openTime
-        closeTime
-      }
-    }
-  `, { id: route.params.weekdayScheduleId.toString() });
-
-  return weekdaySchedule;
+const { data, status } = await useAsyncData(() => {
+  return $graphql.default.request(graphql(/* GraphQL */ GET_WEEKDAY_SCHEDULE), {
+    id: route.params.weekdayScheduleId.toString(),
+  });
 });
 
-if (! weekdaySchedule.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Weekday Schedule Not Found' });
+if (! data.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Weekday Schedule Not Found', fatal: true });
 }
+
+useSeoMeta({
+  title: `Edit ${getWeekdayNameById(data.value.weekdaySchedule?.weekday ?? 0).toLowerCase()}`,
+});
 
 const { handleSubmit, handleReset, meta } = useForm({
   initialValues: {
-    isActive: weekdaySchedule.value.isActive,
-    openTime: weekdaySchedule.value.openTime,
-    closeTime: weekdaySchedule.value.closeTime,
+    isActive: data.value?.weekdaySchedule?.isActive,
+    openTime: data.value?.weekdaySchedule?.openTime,
+    closeTime: data.value?.weekdaySchedule?.closeTime,
   },
   validationSchema: toTypedSchema(yup.object({
-    isActive: yup.boolean(),
-    openTime: yup.number().integer().min(1).max(1439).test('is-earlier', 'Opening time must be earlier than closing time', (value, ctx) => {
+    isActive: yup.boolean().required(),
+    openTime: yup.number().integer().required().min(1).max(1439).test('is-earlier', 'Opening time must be earlier than closing time', (value, ctx) => {
       return value === undefined || value < ctx.parent.closeTime;
     }),
-    closeTime: yup.number().integer().min(1).max(1439).test('is-later', 'Closing time must be later than opening time', (value, ctx) => {
+    closeTime: yup.number().integer().required().min(1).max(1439).test('is-later', 'Closing time must be later than opening time', (value, ctx) => {
       return value === undefined || value > ctx.parent.openTime;
     }),
   })),
 });
 
-const submitForm = handleSubmit(async (values) => {
+const editWeekdaySchedule = handleSubmit(async (values) => {
   loading.value = true;
 
   try {
-    await $graphql.default.request(gql`
-    mutation updateWeekdaySchedule($id: ID!, $isActive: Boolean!, $openTime: Int!, $closeTime: Int!) {
-      updateWeekdaySchedule(id: $id, input: { isActive: $isActive, openTime: $openTime, closeTime: $closeTime }) {
-        id
-        isActive
-        openTime
-        closeTime
-      }
-    }
-  `, {
+    await $graphql.default.request(graphql(/* GraphQL */ UPDATE_WEEKDAY_SCHEDULE), {
       id: route.params.weekdayScheduleId.toString(),
       isActive: values.isActive,
       openTime: values.openTime,

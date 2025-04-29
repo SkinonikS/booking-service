@@ -1,10 +1,10 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <Card>
       <template #title>{{ $t('management.pages.bookings.title') }}</template>
       <template #subtitle>{{ $t('management.pages.bookings.description') }}</template>
       <template #content>
-        <DataTable :value="bookings ?? []" :loading="status === 'pending' || loading">
+        <DataTable :value="data?.bookings ?? []" :loading="status === 'pending' || loading">
           <template #empty>
             <div class="flex flex-col items-center">
               <span>{{ $t('common.noBookingsFound') }}</span>
@@ -37,7 +37,7 @@
           </Column>
           <Column field="status" :header="$t('common.status')">
             <template #body="{ data: item }">
-              <MyBookingsDataTableStatusBadge :booking-date="item.date" :cancelled-at="item.cancelledAt" :cancellation-reason="item.cancellationReason" />
+              <BaseBookingProviderStatusBadge :booking-date="item.date" :cancelled-at="item.cancelledAt" :cancellation-reason="item.cancellationReason" />
             </template>
           </Column>
           <Column field="actions" body-style="text-align: right">
@@ -52,22 +52,14 @@
         </DataTable>
       </template>
     </Card>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import { gql } from 'nuxt-graphql-request/utils';
+import { graphql } from '~/utils/graphql';
+import type { Booking } from '~/utils/graphql/graphql';
+import { GET_BOOKINGS, CANCEL_BOOKING } from '~/graphql/management/bookings-page';
 import * as yup from 'yup';
-import type { Booking, Service, User } from '~/types/models';
-
-export interface GraphqlResponse {
-  bookings: Booking & {
-    user: Pick<User, 'id' | 'name' | 'email'>;
-    serviceSchedule: {
-      service: Pick<Service, 'id' | 'name'>;
-    };
-  };
-}
 
 definePageMeta({
   layout: 'management',
@@ -76,57 +68,31 @@ definePageMeta({
   }).isValidSync(route.params),
 });
 
+useSeoMeta({
+  title: 'Bookings',
+});
+
 const loading = ref(false);
 
 const { $graphql } = useNuxtApp();
 const route = useRoute();
 const toast = useToast();
 
-const { data: bookings, status } = await useAsyncData(async () => {
-  const { bookings } = await $graphql.default.request<GraphqlResponse>(gql`
-    query bookings($id: ID!) {
-      bookings(bookingProviderId: $id) {
-        id
-        date
-        timeSlot
-        serviceSchedule {
-          service {
-            id
-            name
-          }
-        }
-        user {
-          id
-          name
-          email
-        }
-        cancelledAt
-        cancellationReason
-      }
-    }
-  `, { id: route.params.bookingProviderId.toString() });
-
-  return bookings;
-});
+const { data, status } = await useAsyncData(() => $graphql.default.request(graphql(/* GraphQL */ GET_BOOKINGS), {
+  id: route.params.bookingProviderId.toString()
+}));
 
 const cancelBooking = async (booking: Booking) => {
   loading.value = true;
 
   try {
-    await $graphql.default.request(gql`
-      mutation cancelBooking($id: ID!, $cancellationReason: String!) {
-        cancelBooking(id: $id, input: { cancellationReason: $cancellationReason }) {
-          id
-          cancelledAt
-          cancellationReason
-        }
-      }
-    `, {
+    await $graphql.default.request(graphql(/* GraphQL */ CANCEL_BOOKING), {
       id: booking.id,
       cancellationReason: 'Cancelled by provider.',
     });
 
     booking.cancelledAt = new Date().toISOString();
+    booking.cancellationReason = 'Cancelled by provider';
 
     toast.add({ summary: 'Booking cancelled successfully', severity: 'success' });
   } catch (e) {

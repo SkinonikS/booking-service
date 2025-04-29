@@ -1,14 +1,25 @@
 export default defineI18nLocale(async () => {
   return {
-    layouts: {
-      default: {
-        navigation: {
-          homepage: 'Home',
-          advancedSearch: 'Search',
-          management: 'Management',
-        },
+    offline: {
+      title: 'You\'re offline',
+      description: 'It looks like you\'ve lost your internet connection. Please check your connection and try again.',
+      retryButton: 'Retry Connection',
+      tipsTitle: 'Troubleshooting Tips:',
+      tip1: 'Check if your Wi-Fi or mobile data is turned on',
+      tip2: 'Try switching between Wi-Fi and mobile data',
+      tip3: 'If the problem persists, contact your network provider',
+    },
+
+    drawer: {
+      navigation: {
+        homepage: 'Home',
+        advancedSearch: 'Search',
+        management: 'Management',
+        logout: 'Logout',
+        bookings: 'Bookings',
       },
     },
+
 
     pages: {
       homepage: {
@@ -80,11 +91,11 @@ export default defineI18nLocale(async () => {
           title: 'Service schedules',
           description: 'Manage service schedules.',
         },
-        serviceSchedultCreate: {
+        serviceScheduleCreate: {
           title: 'Create service schedule',
           description: 'Fill in the form below to create a new service schedule.',
         },
-        serviceSchedultEdit: {
+        serviceScheduleEdit: {
           title: 'Edit service schedule',
           description: 'Update the details of your service schedule.',
         },
@@ -92,6 +103,8 @@ export default defineI18nLocale(async () => {
     },
 
     common: {
+      filter: 'Filter',
+      filterDescription: 'Filter your search results by categories, services, and more.',
       categories: 'Categories',
       search: 'Search',
       category: 'Category',

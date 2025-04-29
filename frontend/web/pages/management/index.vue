@@ -1,9 +1,9 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
         <template #content>
-          <DataTable :loading="status === 'pending'" :value="bookingProviders">
+          <DataTable :loading="status === 'pending'" :value="data?.me?.bookingProviders ?? []">
             <Column name="name" :header="$t('common.name')">
               <template #body="{ data: item }">
                 <div class="flex flex-col gap-2">
@@ -11,8 +11,22 @@
                 </div>
               </template>
             </Column>
+            <Column name="email" header="Email">
+              <template #body="{ data: item }">
+                <div class="flex flex-col gap-2">
+                  <p>{{ item.email }}</p>
+                </div>
+              </template>
+            </Column>
+            <Column name="phone" header="Phone">
+              <template #body="{ data: item }">
+                <div class="flex flex-col gap-2">
+                  <p>{{ item.phone }}</p>
+                </div>
+              </template>
+            </Column>
             <Column name="actions" body-style="text-align: right">
-              <template #body="{ data: item }: { data: BookingProvider }">
+              <template #body="{ data: item }">
                 <Button v-tooltip.top="$t('common.view')" v-wave text rounded @click="viewBookingProvider(item.id)">
                   <template #icon>
                     <Icon name="mdi:eye" />
@@ -20,43 +34,33 @@
                 </Button>
               </template>
             </Column>
+            <template #empty>
+              <div class="text-center">No booking providers found.</div>
+            </template>
           </DataTable>
         </template>
       </Card>
     </div>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import { gql } from 'nuxt-graphql-request/utils';
-import type { BookingProvider } from '~/types/models';
-
-export interface GraphqlResponse {
-  me: {
-    bookingProviders: Pick<BookingProvider, 'id' | 'name'>[];
-  };
-}
+import { graphql } from '~/utils/graphql';
+import { GET_BOOKING_PROVIDERS } from '~/graphql/management/home-page';
 
 definePageMeta({
   layout: 'default',
 });
 
+useSeoMeta({
+  title: 'My booking providers',
+});
+
 const localeRoute = useLocaleRoute();
 const { $graphql } = useNuxtApp();
 
-const { data: bookingProviders, status } = await useAsyncData(async () => {
-  const data = await $graphql.default.request<GraphqlResponse>(gql`
-    query bookingProviders {
-      me {
-        bookingProviders {
-          id
-          name
-        }
-      }
-    }
-  `);
-
-  return data.me.bookingProviders;
+const { data, status } = await useAsyncData(() => {
+  return $graphql.default.request(graphql(/* GraphQL */ GET_BOOKING_PROVIDERS));
 });
 
 const viewBookingProvider = async (bookingProviderId: string) => {

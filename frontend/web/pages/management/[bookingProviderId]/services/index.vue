@@ -1,11 +1,11 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
         <template #title>{{ $t('management.pages.services.title') }}</template>
         <template #subtitle>{{ $t('management.pages.services.description') }}</template>
         <template #content>
-          <DataTable :value="bookingProvider?.services ?? []" :loading="status === 'pending'">
+          <DataTable :value="data?.bookingProvider?.services ?? []" :loading="status === 'pending'">
             <Column field="name" :header="$t('common.name')">
               <template #body="{ data: item }">
                 <span>{{ item.name }}</span>
@@ -13,7 +13,7 @@
             </Column>
             <Column field="description" :header="$t('common.description')">
               <template #body="{ data: item }">
-                <span>{{ item.description ?? 'N/A' }}</span>
+                <span>{{ item.description ?? '-' }}</span>
               </template>
             </Column>
             <Column field="actions" body-style="text-align: right">
@@ -38,19 +38,13 @@
         </template>
       </Card>
     </div>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import { gql } from 'nuxt-graphql-request/utils';
 import * as yup from 'yup';
-import type { BookingProvider, Service } from '~/types/models';
-
-interface GraphqlResponse {
-  bookingProvider: Pick<BookingProvider, 'id'> & {
-    services: Pick<Service, 'id' | 'name' | 'description'>[];
-  };
-}
+import { GET_SERVICES } from '~/graphql/management/services/index-page';
+import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
@@ -59,29 +53,22 @@ definePageMeta({
   }).isValidSync(route.params),
 });
 
+useSeoMeta({
+  title: 'Services',
+});
+
 const { $graphql } = useNuxtApp();
 const route = useRoute();
 const localeRoute = useLocaleRoute();
 
-const { data: bookingProvider, status } = await useAsyncData(async () => {
-  const { bookingProvider } = await $graphql.default.request<GraphqlResponse>(gql`
-    query bookingProvider($id: ID!) {
-      bookingProvider(id: $id) {
-        id
-        services {
-          id
-          name
-          description
-        }
-      }
-    }
-  `, { id: route.params.bookingProviderId.toString() });
-
-  return bookingProvider;
+const { data, status } = await useAsyncData(() => {
+  return $graphql.default.request(graphql(/* GraphQL */ GET_SERVICES), {
+    id: route.params.bookingProviderId.toString(),
+  });
 });
 
-if (! bookingProvider.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Booking Provider Not Found' });
+if (! data.value) {
+  throw createError({ statusCode: 404, statusMessage: 'Booking Provider Not Found', fatal: true });
 }
 
 const editService = async (serviceId: string) => {

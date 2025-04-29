@@ -1,5 +1,5 @@
 <template>
-  <PageContainer>
+  <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
         <template #title>{{ $t('pages.meBookings.title') }}</template>
@@ -28,7 +28,7 @@
             </Column>
             <Column field="status" :header="$t('common.status')">
               <template #body="{ data: item }">
-                <MyBookingsDataTableStatusBadge :booking-date="item.date" :cancellation-reason="item.cancellationReason" :cancelled-at="item.cancelledAt" />
+                <BaseBookingProviderStatusBadge :booking-date="item.date" :cancellation-reason="item.cancellationReason" :cancelled-at="item.cancelledAt" />
               </template>
             </Column>
             <Column field="actions" body-style="text-align: right">
@@ -40,32 +40,27 @@
                 </Button>
               </template>
             </Column>
+            <template #empty>
+              <div class="text-center">No booking history found.</div>
+            </template>
           </DataTable>
         </template>
       </Card>
     </div>
-  </PageContainer>
+  </BasePageContainer>
 </template>
 
 <script setup lang="ts">
-import { gql } from 'nuxt-graphql-request/utils';
-import type { Booking, BookingProvider, Service, ServiceSchedule } from '~/types/models';
-
-export interface GraphqlResponse {
-  me: {
-    bookings: Pick<Booking, 'id' | 'date' | 'timeSlot' | 'cancelledAt' | 'cancellationReason'>[] & {
-      serviceSchedule: Pick<ServiceSchedule, 'id' | 'maxBookings' | 'timeSpan' | 'closeTime' | 'openTime'> & {
-        service: Pick<Service, 'id' | 'name'>;
-        weekdaySchedule: {
-          bookingProvider: Pick<BookingProvider, 'id' | 'name'>;
-        };
-      };
-    };
-  };
-}
+import { graphql } from '~/utils/graphql';
+import { GET_MY_BOOKINGS, CANCEL_BOOKING } from '~/graphql/me-bookings-page';
+import type { Booking } from '~/utils/graphql/graphql';
 
 definePageMeta({
   layout: 'default',
+});
+
+useSeoMeta({
+  title: 'My Bookings',
 });
 
 const loading = ref(false);
@@ -78,40 +73,12 @@ if (! loggedIn.value) {
   throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
 }
 
-const { data: me, status, error } = await useAsyncData(async () => {
-  const { me } = await $graphql.default.request<GraphqlResponse>(gql`
-    query bookings {
-      me {
-        id
-        bookings {
-          id
-          cancelledAt
-          cancellationReason
-          date
-          timeSlot
-          serviceSchedule {
-            id
-            weekdaySchedule {
-              bookingProvider {
-                id
-                name
-              }
-            }
-            service {
-              id
-              name
-            }
-          }
-        }
-      }
-    }
-  `);
-
-  return me;
+const { data, status, error } = await useAsyncData(() => {
+  return $graphql.default.request(graphql(/* GraphQL */ GET_MY_BOOKINGS));
 });
 
 
-if (! me.value) {
+if (! data.value) {
   throw createError({ statusCode: 404, statusMessage: error.value?.message || 'Bookings not found' });
 }
 
@@ -119,15 +86,9 @@ const cancelBooking = async (booking: Booking) => {
   loading.value = true;
 
   try {
-    await $graphql.default.request(gql`
-      mutation cancelBooking($bookingId: ID!) {
-        cancelBooking(id: $bookingId, input: { cancellationReason: "User cancelled" }) {
-          id
-          cancelledAt
-          cancellationReason
-        }
-      }
-    `, { bookingId: booking.id });
+    await $graphql.default.request(graphql(/* GraphQL */ CANCEL_BOOKING), {
+      bookingId: booking.id,
+    });
 
     booking.cancelledAt = new Date().toISOString();
     booking.cancellationReason = 'User cancelled';
