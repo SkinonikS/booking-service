@@ -1,16 +1,21 @@
 <template>
-  <div class="container mx-auto text-center px-6">
-    <h1 class="text-4xl font-bold mb-4">{{ $t('pages.homepage.title') }}</h1>
-    <p class="text-xl mb-8">{{ $t('pages.homepage.description') }}</p>
+  <div class="container mx-auto px-6">
+    <h1 class="text-4xl font-bold text-center mb-4">{{ $t('public.homepage.title') }}</h1>
+    <p class="text-xl text-center mb-8">{{ $t('public.homepage.description') }}</p>
     <div class="max-w-4xl mx-auto bg-white rounded-lg p-6 shadow-lg">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-start gap-4">
-        <Select v-model="category" :options="categories" :loading="status === 'pending'" fluid option-label="label" option-value="value" class="lg:col-span-1" :placeholder="$t('common.category')"/>
-        <DatePicker v-model="date" class="lg:col-span-1" :placeholder="$t('common.date')" :min-date="new Date()" show-icon>
+        <InputGroup>
+          <InputGroupAddon>
+            <Icon name="mdi:shape-plus" />
+          </InputGroupAddon>
+          <Select v-model="category" :options="categories" :loading="status === 'pending'" fluid option-label="label" option-value="value" :placeholder="$t('labels.category')"/>
+        </InputGroup>
+        <DatePicker v-model="date" class="lg:col-span-1" :placeholder="$t('labels.date')" :min-date="new Date()" show-icon>
           <template #dropdownicon>
             <Icon name="mdi:calendar" />
           </template>
         </DatePicker>
-        <Button v-wave :disabled="canSearch" class="sm:col-span-2 lg:col-span-1" :label="$t('common.search')" @click="quickSearch">
+        <Button v-wave :disabled="canSearch" class="sm:col-span-2 lg:col-span-1" :label="$t('actions.search')" @click="quickSearch">
           <template #icon>
             <Icon name="mdi:magnify" />
           </template>

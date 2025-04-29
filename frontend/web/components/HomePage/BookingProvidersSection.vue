@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto">
-    <h2 class="text-3xl font-bold mb-8 text-center">{{ $t('common.bookingProviders') }}</h2>
+    <h2 class="text-3xl font-bold mb-8 text-center">{{ $t('public.homepage.bookingProviders') }}</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
       <BaseBookingProviderPanel
         v-for="bookingProvider in data?.randomBookingProviders"

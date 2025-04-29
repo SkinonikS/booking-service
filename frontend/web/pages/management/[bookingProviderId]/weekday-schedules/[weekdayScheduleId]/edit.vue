@@ -2,8 +2,8 @@
   <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>Edit weekly schedule</template>
-        <template #subtitle>Update the details of your weekly schedule.</template>
+        <template #title>{{ $t('management.schedules.weekday.edit.title') }}</template>
+        <template #subtitle>{{ $t('management.schedules.weekday.edit.description') }}</template>
         <template #content>
           <WeekdayScheduleEditForm ref="formRef" :disabled="status === 'pending' || loading" @submit="editWeekdaySchedule" />
         </template>
@@ -12,16 +12,16 @@
         </template>
       </Card>
       <Card>
-        <template #title>Service schedules</template>
-        <template #subtitle>Manage service schedules.</template>
+        <template #title>{{ $t('management.schedules.services.title') }}</template>
+        <template #subtitle>{{ $t('management.schedules.services.description') }}</template>
         <template #content>
           <template v-if="status === 'success'">
-            <ServiceScheduleSection :weekday-schedule-id="(data?.weekdaySchedule?.id) as unknown as string" />
+            <ServiceScheduleSection :weekday-schedule-id="((data?.weekdaySchedule?.id) as unknown as string)" />
           </template>
         </template>
         <template #footer>
           <div class="flex flex-row-reverse">
-            <Button v-wave label="Add service schedule" @click="createServiceSchedule">
+            <Button v-wave :label="$t('actions.addServiceSchedule')" @click="createServiceSchedule">
               <template #icon>
                 <Icon name="mdi:plus" />
               </template>
@@ -41,6 +41,7 @@ import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
+  middleware: ['is-verified'],
   validate: (route) => yup.object({
     bookingProviderId: yup.string().required().uuid(),
     weekdayScheduleId: yup.string().required().uuid(),
@@ -49,6 +50,7 @@ definePageMeta({
 
 const loading = ref(false);
 
+const { t } = useI18n();
 const { $graphql } = useNuxtApp();
 const localeRoute = useLocaleRoute();
 const route = useRoute();
@@ -65,8 +67,10 @@ if (! data.value) {
   throw createError({ statusCode: 404, statusMessage: 'Weekday Schedule Not Found', fatal: true });
 }
 
+const weekdayName = t(`weekdays.${data.value.weekdaySchedule?.weekday ?? 0}`).toLowerCase();
+
 useSeoMeta({
-  title: `Edit ${getWeekdayNameById(data.value.weekdaySchedule?.weekday ?? 0).toLowerCase()}`,
+  title: `Edit ${weekdayName}`,
 });
 
 const { handleSubmit, handleReset, meta } = useForm({

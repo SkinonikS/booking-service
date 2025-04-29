@@ -1,165 +1,80 @@
 export default defineI18nLocale(async () => {
   return {
-    offline: {
-      title: 'You\'re offline',
-      description: 'It looks like you\'ve lost your internet connection. Please check your connection and try again.',
-      retryButton: 'Retry Connection',
-      tipsTitle: 'Troubleshooting Tips:',
-      tip1: 'Check if your Wi-Fi or mobile data is turned on',
-      tip2: 'Try switching between Wi-Fi and mobile data',
-      tip3: 'If the problem persists, contact your network provider',
-    },
-
-    drawer: {
-      navigation: {
-        homepage: 'Home',
-        advancedSearch: 'Search',
-        management: 'Management',
-        logout: 'Logout',
-        bookings: 'Bookings',
-      },
-    },
-
-
-    pages: {
-      homepage: {
-        title: 'Find and Book Amazing Experiences',
-        description: 'Explore our features and services.',
-      },
-      search: {
-        noResultsFound: {
-          title: 'No results found',
-          description1: 'We couldn\'t find any results matching your search.',
-          description2: 'Try adjusting your search filters or categories.',
-        },
-      },
-      bookingProvidersShow: {
-        contactsTitle: 'Contacts',
-        contactsDescription: 'Have questions? You contact booking provider using the following contacts:',
-        requestBookingTitle: 'Request booking',
-        requestBookingDescription: 'Fill in the form below to request a booking.',
-      },
-      meBookings: {
-        title: 'My bookings',
-        description: 'Manage your bookings and reservations.',
-      },
-    },
-
-    management: {
-      pages: {
-        bookings: {
-          title: 'Bookings',
-          description: 'Manage your bookings and reservations.',
-        },
-        settingsGeneral: {
-          title: 'General settings',
-          description: 'Update your business details and contact information.',
-        },
-        settingsGeneralGalleyImages: {
-          title: 'Gallery images',
-          description: 'Manage your gallery images.',
-          noCoverImage: 'No gallery images available',
-          clickToUpload: 'Click to upload a new gallery image',
-        },
-        settingsGeneralCoverImage: {
-          title: 'Cover image',
-          description: 'This image will be displayed as the cover image.',
-          noCoverImage: 'No cover image available',
-          clickToUpload: 'Click to upload a new cover image',
-        },
-        services: {
-          title: 'Services',
-          description: 'Manage your services and offerings.',
-        },
-        servicesCreate: {
-          title: 'Create service',
-          description: 'Fill in the form below to create a new service.',
-        },
-        servicesEdit: {
-          title: 'Edit service',
-          description: 'Update the details of your service.',
-        },
-        weekdaySchedules: {
-          title: 'Weekly Schedule Pattern',
-          description: 'Set your regular weekly availability pattern.',
-        },
-        weekdaySchedulesEdit: {
-          title: 'Edit weekly schedule',
-          description: 'Update the details of your weekly schedule.',
-        },
-        weekdaySchedulesServices: {
-          title: 'Service schedules',
-          description: 'Manage service schedules.',
-        },
-        serviceScheduleCreate: {
-          title: 'Create service schedule',
-          description: 'Fill in the form below to create a new service schedule.',
-        },
-        serviceScheduleEdit: {
-          title: 'Edit service schedule',
-          description: 'Update the details of your service schedule.',
-        },
-      },
-    },
-
-    common: {
-      filter: 'Filter',
-      filterDescription: 'Filter your search results by categories, services, and more.',
-      categories: 'Categories',
-      search: 'Search',
-      category: 'Category',
-      bookingProviders: 'Booking providers',
-      addServiceSchedule: 'Add service schedule',
-      delete: 'Delete',
-      addService: 'Add service',
-      description: 'Description',
-      uploadCoverImage: 'Upload cover image',
-      addGalleryImage: 'Add gallery image',
-      cancelBooking: 'Cancel booking',
-      noBookingsFound: 'No bookings found',
+    actions: {
+      save: 'Save',
       edit: 'Edit',
-      timeSlot: 'Time slot',
-      schedule: 'Schedule',
-      service: 'Service',
+      delete: 'Delete',
+      view: 'View',
+      reset: 'Reset',
+      filter: 'Filter',
+      resetFilter: 'Reset filter',
+      goHome: 'Go home',
+      goBack: 'Go back',
+      search: 'Search',
+      addNew: 'Add new',
+      upload: 'Upload',
+      cancel: 'Cancel',
       requestBooking: 'Request booking',
-      weekday: 'Weekday',
-      status: 'Status',
-      openTime: 'Open time',
-      closeTime: 'Close time',
+      cancelBooking: 'Cancel booking',
+      addService: 'Add service',
+      addServiceSchedule: 'Add service schedule',
+      login: 'Login',
+      logout: 'Logout',
+    },
+    labels: {
+      name: 'Name',
       email: 'Email',
       phone: 'Phone',
+      address: 'Address',
+      website: 'Website',
       date: 'Date',
       time: 'Time',
-      name: 'Name',
-      view: 'View',
+      description: 'Description',
+      category: 'Category',
+      categories: 'Categories',
+      status: 'Status',
+      weekday: 'Weekday',
+      timeSlot: 'Time slot',
+      openTime: 'Open time',
+      closeTime: 'Close time',
+      timeSpan: 'Time span',
+      maxBookings: 'Max bookings',
+      enabled: 'Enabled',
+      service: 'Service',
+      schedule: 'Schedule',
       aboutUs: 'About us',
-      noImageAvailable: 'No image available',
-      homepage: 'Homepage',
-      advancedSearch: 'Advanced search',
       profile: 'Profile',
-      bookings: 'My bookings',
-      logout: 'Logout',
-      login: 'Login',
+      bookingProvider: 'Booking provider',
+    },
+    statuses: {
       active: 'Active',
       inactive: 'Inactive',
       closed: 'Closed',
-      goHome: 'Go home',
-      goBack: 'Go back',
-      resetFilter: 'Reset filter',
-      save: 'Save',
-      noServicesFound: 'No services found',
-      maxBookings: 'Max bookings',
-      timeSpan: 'Time span',
-      enabled: 'Enabled',
       past: 'Past',
       upcoming: 'Upcoming',
       cancelled: 'Cancelled',
-      bookingProvider: 'Booking provider',
-      website: 'Website',
-      address: 'Address',
-      reset: 'Reset',
     },
-
+    images: {
+      placeholders: {
+        noImage: 'No image available',
+      },
+    },
+    navigation: {
+      mainMenu: {
+        homepage: 'Home',
+        search: 'Search',
+        management: 'Management',
+        bookings: 'My bookings',
+        logout: 'Logout',
+        login: 'Login',
+      },
+      managementMenu: {
+        bookings: 'Bookings',
+        services: 'Services',
+        weekdaySchedules: 'Weekday Schedule',
+        general: 'General Information',
+      },
+    },
     weekdays: {
       0: 'Sunday',
       1: 'Monday',
@@ -169,8 +84,7 @@ export default defineI18nLocale(async () => {
       5: 'Friday',
       6: 'Saturday',
     },
-
-    error: {
+    errors: {
       404: {
         title: 'Page not found',
         description: 'Sorry, the page you are looking for does not exist.',
@@ -182,6 +96,142 @@ export default defineI18nLocale(async () => {
       401: {
         title: 'Unauthorized',
         description: 'Sorry, you are not authorized to access this page.',
+      },
+    },
+    public: {
+      homepage: {
+        title: 'Find and Book Amazing Experiences',
+        description: 'Explore our features and services.',
+        categories: 'Categories',
+        bookingProviders: 'Booking providers',
+      },
+      search: {
+        title: 'Advanced Search',
+        description: 'Find booking providers by category, service, or location',
+        filterTitle: 'Filter',
+        filterDescription: 'Filter your search results by categories, services, and more.',
+        noResults: {
+          title: 'No results found',
+          description1: 'We couldn\'t find any results matching your search.',
+          description2: 'Try adjusting your search filters or categories.',
+        },
+      },
+      bookingProvider: {
+        contacts: {
+          title: 'Contacts',
+          description: 'Have questions? You contact booking provider using the following contacts:',
+        },
+        booking: {
+          title: 'Request booking',
+          description: 'Fill in the form below to request a booking.',
+        },
+        services: {
+          title: 'Available Services',
+        },
+        about: {
+          title: 'About Provider',
+        },
+      },
+      userBookings: {
+        title: 'My bookings',
+        description: 'Manage your bookings and reservations.',
+        tabs: {
+          upcoming: 'Upcoming',
+          past: 'Past',
+          cancelled: 'Cancelled',
+        },
+        noResults: {
+          title: 'No bookings found',
+        },
+      },
+    },
+    management: {
+      bookingProviders: {
+        noResults: {
+          title: 'No bookings found',
+        },
+      },
+      bookings: {
+        title: 'Bookings',
+        description: 'Manage your bookings and reservations.',
+        noResults: {
+          title: 'No bookings found',
+        },
+      },
+      services: {
+        title: 'Services',
+        description: 'Manage your services and offerings.',
+        noResults: {
+          title: 'No bookings found',
+        },
+        create: {
+          title: 'Create service',
+          description: 'Fill in the form below to create a new service.',
+        },
+        edit: {
+          title: 'Edit service',
+          description: 'Update the details of your service.',
+        },
+      },
+      schedules: {
+        weekday: {
+          title: 'Weekly Schedule Pattern',
+          description: 'Set your regular weekly availability pattern.',
+          edit: {
+            title: 'Edit weekly schedule',
+            description: 'Update the details of your weekly schedule.',
+          },
+        },
+        services: {
+          title: 'Service schedules',
+          description: 'Manage service schedules.',
+          create: {
+            title: 'Create service schedule',
+            description: 'Fill in the form below to create a new service schedule.',
+          },
+          edit: {
+            title: 'Edit service schedule',
+            description: 'Update the details of your service schedule.',
+          },
+          noResults: {
+            title: 'No services found.',
+          },
+        },
+      },
+      settings: {
+        general: {
+          title: 'General settings',
+          description: 'Update your business details and contact information.',
+          sections: {
+            basics: {
+              title: 'Basic Information',
+            },
+            contacts: {
+              title: 'Contact Information',
+            },
+            location: {
+              title: 'Location',
+            },
+          },
+        },
+        media: {
+          coverImage: {
+            title: 'Cover image',
+            description: 'This image will be displayed as the cover image.',
+            noResults: {
+              title: 'No cover image available',
+              description: 'You can upload a new cover image.',
+            },
+          },
+          gallery: {
+            title: 'Gallery images',
+            description: 'Manage your gallery images.',
+            noResults: {
+              title: 'No gallery images available',
+              description: 'You can upload new gallery images.',
+            },
+          },
+        },
       },
     },
   };

@@ -4,21 +4,21 @@
       <Card>
         <template #content>
           <DataTable :loading="status === 'pending'" :value="data?.me?.bookingProviders ?? []">
-            <Column name="name" :header="$t('common.name')">
+            <Column name="name" :header="$t('labels.name')">
               <template #body="{ data: item }">
                 <div class="flex flex-col gap-2">
                   <p>{{ item.name }}</p>
                 </div>
               </template>
             </Column>
-            <Column name="email" header="Email">
+            <Column name="email" :header="$t('labels.email')">
               <template #body="{ data: item }">
                 <div class="flex flex-col gap-2">
                   <p>{{ item.email }}</p>
                 </div>
               </template>
             </Column>
-            <Column name="phone" header="Phone">
+            <Column name="phone" :header="$t('labels.phone')">
               <template #body="{ data: item }">
                 <div class="flex flex-col gap-2">
                   <p>{{ item.phone }}</p>
@@ -27,7 +27,7 @@
             </Column>
             <Column name="actions" body-style="text-align: right">
               <template #body="{ data: item }">
-                <Button v-tooltip.top="$t('common.view')" v-wave text rounded @click="viewBookingProvider(item.id)">
+                <Button v-tooltip.top="$t('actions.view')" v-wave text rounded @click="viewBookingProvider(item.id)">
                   <template #icon>
                     <Icon name="mdi:eye" />
                   </template>
@@ -35,7 +35,7 @@
               </template>
             </Column>
             <template #empty>
-              <div class="text-center">No booking providers found.</div>
+              <div class="text-center">{{ $t('management.bookingProviders.noResults.title') }}</div>
             </template>
           </DataTable>
         </template>
@@ -45,11 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import { graphql } from '~/utils/graphql';
 import { GET_BOOKING_PROVIDERS } from '~/graphql/management/home-page';
+import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'default',
+  middleware: ['is-verified'],
 });
 
 useSeoMeta({

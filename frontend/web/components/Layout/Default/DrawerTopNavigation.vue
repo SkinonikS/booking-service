@@ -9,14 +9,14 @@ const localeRoute = useLocaleRoute();
 
 const links = computed(() => [
   {
-    label: 'drawer.navigation.homepage',
+    label: 'navigation.mainMenu.homepage',
     icon: 'mdi:house',
-    to: localeRoute({ name: 'index' }),
+    to: localeRoute({ name: 'index' }) ?? '/',
   },
   {
-    label: 'drawer.navigation.advancedSearch',
+    label: 'navigation.mainMenu.search',
     icon: 'mdi:magnify',
-    to: localeRoute({ name: 'search' }),
+    to: localeRoute({ name: 'search' }) ?? '/',
   },
 ]);
 </script>

@@ -3,21 +3,23 @@
     <Icon :name="props.icon" size="1.5rem" />
     <span class="font-medium">{{ props.label }}</span>
   </span>
-  <NuxtLinkLocale v-else v-wave active-class="bg-primary/10" :to="props.to" :class="['flex select-none items-center gap-4 cursor-pointer p-4 rounded hover:bg-surface-100 dark:hover:bg-surface-800 duration-150 transition-colors', props.class]" :style="props.style">
-    <Icon :name="props.icon" size="1.5rem" />
+  <NuxtLink v-else v-wave active-class="bg-primary/10" :to="props.to" :class="['flex select-none items-center gap-4 cursor-pointer p-4 rounded hover:bg-surface-100 dark:hover:bg-surface-800 duration-150 transition-colors', props.class]" :style="props.style">
+    <div>
+      <Icon :name="props.icon" size="1.5rem" />
+    </div>
     <span class="font-medium">{{ props.label }}</span>
-  </NuxtLinkLocale>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">
-import type { RouteLocationNamedI18n, RouteLocationResolvedI18n } from 'vue-router';
+import type { RouteLocationGeneric, RouteLocationRaw } from 'vue-router';
 
 export interface Props {
   class?: string;
   style?: string;
   label: string;
   icon: string;
-  to: RouteLocationNamedI18n | RouteLocationResolvedI18n | (() => void);
+  to: RouteLocationRaw | RouteLocationGeneric | (() => void);
 }
 
 const props = withDefaults(defineProps<Props>(), {

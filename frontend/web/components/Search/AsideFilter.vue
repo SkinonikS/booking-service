@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+import _ from 'lodash';
 import * as yup from 'yup';
 
 const formRef = useTemplateRef('formRef');

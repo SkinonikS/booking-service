@@ -1,10 +1,10 @@
 <template>
   <form ref="formRef" :class="['grid grid-cols-1 gap-4', props.class]" :style="props.style" novalidate @submit="(e) => emit('submit', e)">
-    <BaseFormSwitchInput name="isActive" :disabled="props.disabled" :label="$t('common.enabled')" class="col-span-1" />
-    <BaseFormTimeInput name="openTime" :disabled="props.disabled" :label="$t('common.openTime')" class="col-span-1" />
-    <BaseFormTimeInput  name="closeTime" :disabled="props.disabled" :label="$t('common.closeTime')" class="col-span-1" />
-    <BaseFormNumberInput name="maxBookings" :disabled="props.disabled" :min="1" :max="255" :label="$t('common.maxBookings')" class="col-span-1" />
-    <BaseFormTimeSpanInput name="timeSpan" :disabled="props.disabled" :label="$t('common.timeSpan')" class="col-span-1" />
+    <BaseFormSwitchInput name="isActive" :disabled="props.disabled" :label="$t('labels.enabled')" class="col-span-1" />
+    <BaseFormTimeInput name="openTime" :disabled="props.disabled" :label="$t('labels.openTime')" class="col-span-1" />
+    <BaseFormTimeInput  name="closeTime" :disabled="props.disabled" :label="$t('labels.closeTime')" class="col-span-1" />
+    <BaseFormNumberInput name="maxBookings" :disabled="props.disabled" :min="1" :max="255" :label="$t('labels.maxBookings')" class="col-span-1" />
+    <BaseFormTimeSpanInput name="timeSpan" :disabled="props.disabled" :label="$t('labels.timeSpan')" class="col-span-1" />
   </form>
 </template>
 

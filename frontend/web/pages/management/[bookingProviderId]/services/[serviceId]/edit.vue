@@ -2,16 +2,16 @@
   <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>{{ $t('management.pages.servicesEdit.title') }}</template>
-        <template #subtitle>{{ $t('management.pages.servicesEdit.description') }}</template>
+        <template #title>{{ $t('management.services.edit.title') }}</template>
+        <template #subtitle>{{ $t('management.services.edit.description') }}</template>
         <template #content>
-          <ManagementFormEditService ref="formRef" :disabled="status === 'pending'" @submit="updateService" />
+          <ServiceEditForm ref="formRef" :disabled="status === 'pending'" @submit="updateService" />
         </template>
         <template #footer>
           <BaseFormControls :loading="loading" :disabled="meta.dirty || status === 'pending'" @reset="handleReset()" @submit="formRef?.requestSubmit()">
             <template #before>
               <div class="grow" />
-              <Button v-wave text :label="$t('common.delete')" severity="danger" @click="deleteService()">
+              <Button v-wave text :label="$t('actions.delete')" severity="danger" @click="deleteService()">
                 <template #icon>
                   <Icon name="mdi:delete" />
                 </template>
@@ -31,6 +31,7 @@ import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
+  middleware: ['is-verified'],
   validate: (route) => yup.object({
     serviceId: yup.string().required().uuid(),
     bookingProviderId: yup.string().required().uuid(),
@@ -65,7 +66,7 @@ const { handleSubmit, handleReset, meta } = useForm({
     description: data.value?.service?.description,
   },
   validationSchema: toTypedSchema(yup.object({
-    name: yup.string().required().min(3).label('Name'),
+    name: yup.string().required().min(3).max(32).label('Name'),
     description: yup.string().nullable().label('Description'),
   })),
 });

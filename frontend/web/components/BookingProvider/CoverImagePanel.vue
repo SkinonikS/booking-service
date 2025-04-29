@@ -1,7 +1,7 @@
 <template>
   <Card>
-    <template #title>{{ $t('management.pages.settingsGeneralCoverImages.title') }}</template>
-    <template #subtitle>{{ $t('management.pages.settingsGeneralCoverImages.description') }}</template>
+    <template #title>{{ $t('management.settings.media.coverImage.title') }}</template>
+    <template #subtitle>{{ $t('management.settings.media.coverImage.description') }}</template>
     <template #content>
       <div v-if="! props.image" class="mb-4 flex flex-row-reverse">
         <FileUpload custom-upload auto :disabled="loading" mode="basic" accept="image/*" @uploader="uploadImage" />
@@ -33,8 +33,8 @@
         </BaseCommonImage>
       </div>
       <div v-else class="flex flex-col items-center justify-center p-4">
-        <p>{{ $t('management.pages.settingsGeneralCoverImage.noCoverImage') }}</p>
-        <p>{{ $t('management.pages.settingsGeneralCoverImage.clickToUpload') }}</p>
+        <p>{{ $t('management.settings.media.coverImage.noResults.title') }}</p>
+        <p>{{ $t('management.settings.media.coverImage.noResults.description') }}</p>
       </div>
     </template>
   </Card>
@@ -48,7 +48,11 @@ import { graphql } from '~/utils/graphql';
 import type { Media } from '~/utils/graphql/graphql';
 
 export interface Props {
-  image?: Media;
+  image?: {
+    id: string;
+    fullUrl: string;
+    baseName: string;
+  };
 }
 
 export interface Emits {

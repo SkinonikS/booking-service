@@ -1,7 +1,7 @@
 <template>
   <form ref="formRef" class="grid grid-cols-1 gap-4" novalidate @submit="(e) => emit('submit', e)">
-    <BaseFormTextInput name="name" :disabled="props.disabled" :label="$t('common.name')" class="col-span-1" />
-    <BaseFormTextareaInput name="description" :rows="6" :max-length="200" :disabled="props.disabled" :label="$t('common.description')" class="col-span-1" />
+    <BaseFormTextInput name="name" :disabled="props.disabled" :label="$t('labels.name')" class="col-span-1" />
+    <BaseFormTextareaInput name="description" :rows="6" :max-length="200" :disabled="props.disabled" :label="$t('labels.description')" class="col-span-1" />
   </form>
 </template>
 

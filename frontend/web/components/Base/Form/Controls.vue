@@ -33,8 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   disabled: false,
   showReset: true,
-  primaryActionTokenLabel: () => useI18n().t('common.save'),
-  resetActionTokenLabel: () => useI18n().t('common.reset'),
+  primaryActionTokenLabel: () => useI18n().t('actions.save'),
+  resetActionTokenLabel: () => useI18n().t('actions.reset'),
 });
 
 const emit = defineEmits<Emits>();

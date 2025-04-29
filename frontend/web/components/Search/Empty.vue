@@ -1,7 +1,7 @@
 <template>
   <BaseSearchEmpty>
-    <template #title>{{ $t('pages.search.noResultsFound.title') }}</template>
-    <template #subtitile>{{ $t('pages.search.noResultsFound.description1') }}</template>
-    <template #description>{{ $t('pages.search.noResultsFound.description2') }}</template>
+    <template #title>{{ $t('public.search.noResults.title') }}</template>
+    <template #subtitle>{{ $t('public.search.noResults.description1') }}</template>
+    <template #description>{{ $t('public.search.noResults.description2') }}</template>
   </BaseSearchEmpty>
 </template>

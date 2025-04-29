@@ -2,8 +2,8 @@
   <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>{{ $t('management.pages.serviceScheduleCreate.title') }}</template>
-        <template #subtitle>{{ $t('management.pages.serviceScheduleCreate.description') }}</template>
+        <template #title>{{ $t('management.schedules.services.create.title') }}</template>
+        <template #subtitle>{{ $t('management.schedules.services.create.description') }}</template>
         <template #content>
           <ServiceScheduleCreateForm ref="formRef" :services="services" :disabled="status === 'pending' || loading" @submit="createServiceSchedule" />
         </template>
@@ -23,6 +23,7 @@ import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
+  middleware: ['is-verified'],
   validate: (route) => yup.object({
     bookingProviderId: yup.string().required().uuid(),
     weekdayScheduleId: yup.string().required().uuid(),

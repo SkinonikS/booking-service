@@ -1,7 +1,7 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(() => {
   const { loggedIn } = useOidcAuth();
 
   if (! loggedIn.value) {
-    throw createError({ status: 401, message: 'Unauthorized' });
+    throw createError({ status: 401, message: 'Unauthorized', fatal: true });
   }
 });

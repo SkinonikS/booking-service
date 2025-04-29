@@ -43,7 +43,7 @@ const currentWeekday = props.weekdays.find((weekday) => {
 
 const currentWeekdayWorkingTime = computed(() => {
   if (! currentWeekday?.isActive) {
-    return t('common.closed');
+    return t('statuses.closed');
   }
 
   return getFormattedTimeRange(currentWeekday.openTime, currentWeekday.closeTime);
@@ -55,7 +55,7 @@ const weekendWorkingTimes = computed(() => {
     label: t(`weekdays.${weekday.weekday}`),
     workingTimes: weekday.isActive
       ? getFormattedTimeRange(weekday.openTime, weekday.closeTime)
-      : t('common.closed'),
+      : t('statuses.closed'),
   }));
 });
 </script>

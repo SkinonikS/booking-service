@@ -3,23 +3,23 @@
     <Card>
       <template #title>
         <h2 class="text-lg font-semibold">
-          {{ $t('common.filter') }}
+          {{ $t('public.search.filterTitle') }}
         </h2>
       </template>
       <template #subtitle>
-        {{ $t('common.filterDescription') }}
+        {{ $t('public.search.filterDescription') }}
       </template>
       <template #content>
         <slot name="form" />
       </template>
       <template #footer>
         <div class="flex flex-row gap-2">
-          <Button v-wave class="grow" :label="$t('common.search')" @click="emit('search')">
+          <Button v-wave class="grow" :label="$t('actions.search')" @click="emit('search')">
             <template #icon>
               <Icon name="mdi:filter" />
             </template>
           </Button>
-          <Button v-wave v-tooltip.top="$t('common.resetFilter')" severity="danger" @click="emit('reset')">
+          <Button v-wave v-tooltip.top="$t('actions.resetFilter')" severity="danger" @click="emit('reset')">
             <template #icon>
               <Icon name="mdi:filter-off" />
             </template>

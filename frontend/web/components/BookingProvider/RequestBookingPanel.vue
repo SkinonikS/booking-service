@@ -1,22 +1,22 @@
 <template>
   <Card>
-    <template #title>{{ $t('pages.bookingProvidersShow.requestBookingTitle') }}</template>
-    <template #subtitle>{{ $t('pages.bookingProvidersShow.requestBookingDescription') }}</template>
+    <template #title>{{ $t('public.bookingProvider.booking.title') }}</template>
+    <template #subtitle>{{ $t('public.bookingProvider.booking.description') }}</template>
     <template #content>
       <form ref="formRef" class="flex flex-col gap-4" @submit="submitForm">
-        <BaseFormSelectInput name="serviceId" :label="$t('common.service')" :options="props.services" />
-        <BaseFormDatepickerInput name="date" :label="$t('common.date')" :disabled="! values.serviceId" :disabled-weekdays="props.blockedWeekdays" :min-date="new Date()" inline />
-        <BaseFormSelectInput name="serviceScheduleId" :label="$t('common.schedule')" :options="serviceSchedules" :loading="status === 'pending'" :disabled="! values.serviceId" />
-        <BaseFormSelectInput name="timeSlot" :label="$t('common.timeSlot')" :options="timeSlots" :loading="status === 'pending'" :disabled="! values.serviceScheduleId" />
+        <BaseFormSelectInput name="serviceId" :label="$t('labels.service')" :options="props.services" />
+        <BaseFormDatepickerInput name="date" :label="$t('labels.date')" :disabled="! values.serviceId" :disabled-weekdays="props.blockedWeekdays" :min-date="new Date()" inline />
+        <BaseFormSelectInput name="serviceScheduleId" :label="$t('labels.schedule')" :options="serviceSchedules" :loading="status === 'pending'" :disabled="! values.serviceId" />
+        <BaseFormSelectInput name="timeSlot" :label="$t('labels.timeSlot')" :options="timeSlots" :loading="status === 'pending'" :disabled="! values.serviceScheduleId" />
       </form>
     </template>
     <template #footer>
-      <Button v-if="loggedIn" v-wave fluid :label="$t('common.requestBooking')" :loading="loading" :disabled="! meta.valid" @click="formRef?.requestSubmit()">
+      <Button v-if="loggedIn" v-wave fluid :label="$t('actions.requestBooking')" :loading="loading" :disabled="! meta.valid" @click="formRef?.requestSubmit()">
         <template #icon>
           <Icon name="mdi:calendar-check" />
         </template>
       </Button>
-      <Button v-else v-wave fluid :label="$t('common.login')" :loading="loading" @click="login()">
+      <Button v-else v-wave fluid :label="$t('actions.login')" :loading="loading" @click="login()">
         <template #icon>
           <Icon name="mdi:login" />
         </template>

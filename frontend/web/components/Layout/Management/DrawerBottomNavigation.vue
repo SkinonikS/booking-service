@@ -16,7 +16,7 @@ const links = [
   {
     class: 'text-surface-700 dark:text-surface-0',
     label: 'Back to Home',
-    to: localeRoute({ name: 'index' }),
+    to: localeRoute({ name: 'index' }) ?? '/',
     icon: 'mdi:home',
   },
   {

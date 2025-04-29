@@ -2,8 +2,8 @@
   <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>{{ $t('management.pages.settingsGeneral.title') }}</template>
-        <template #subtitle>{{ $t('management.pages.settingsGeneral.description') }}</template>
+        <template #title>{{ $t('management.settings.general.title') }}</template>
+        <template #subtitle>{{ $t('management.settings.general.description') }}</template>
         <template #content>
           <BookingProviderEditForm ref="formRef" :disabled="status === 'pending' || loading" @reset="handleReset" @submit="updateBookingProvider"  />
         </template>
@@ -38,6 +38,7 @@ import type { Media } from '~/utils/graphql/graphql';
 
 definePageMeta({
   layout: 'management',
+  middleware: ['is-verified'],
   validate: (route) => yup.object({
     bookingProviderId: yup.string().required().uuid(),
   }).isValidSync(route.params),

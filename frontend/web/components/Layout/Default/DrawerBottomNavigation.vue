@@ -9,7 +9,7 @@
     </BaseDrawerNestedNavigation>
   </template>
   <template v-else>
-    <Button v-wave :label="$t('common.login')" fluid @click="startLogin()">
+    <Button v-wave :label="$t('actions.login')" fluid @click="startLogin()">
       <template #icon>
         <Icon name="mdi:login" />
       </template>
@@ -31,13 +31,13 @@ const links = computed(() => {
   const links = [
     {
       class: 'text-surface-700 dark:text-surface-0',
-      label: 'drawer.navigation.bookings',
+      label: 'navigation.mainMenu.bookings',
       icon: 'mdi:list-box',
-      to: localeRoute({ name: 'me-bookings' }),
+      to: localeRoute({ name: 'me-bookings' }) ?? '/',
     },
     {
       class: 'text-red-700',
-      label: 'drawer.navigation.logout',
+      label: 'navigation.mainMenu.logout',
       icon: 'mdi:logout',
       to: () => {
         logout();
@@ -49,9 +49,9 @@ const links = computed(() => {
   if (user.value?.userInfo?.['custom:is_verified'] === 'true') {
     links.unshift({
       class: 'text-surface-700 dark:text-surface-0',
-      label: 'drawer.navigation.management',
+      label: 'navigation.mainMenu.management',
       icon: 'mdi:cog',
-      to: localeRoute({ name: 'management' }),
+      to: localeRoute({ name: 'management' }) ?? '/',
     });
   }
 

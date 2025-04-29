@@ -11,11 +11,11 @@
           <BookingProviderWorkingTime :weekdays="data?.bookingProvider?.weekdaySchedules" />
         </div>
       </section>
-      <section class="w-full">
+      <section v-if="data?.bookingProvider?.galleryImages?.length ?? 0 > 0" class="w-full">
         <Carousel :value="data?.bookingProvider?.galleryImages ?? []" :num-visible="3" :num-scroll="3" :responsive-options="responsiveOptions">
-          <template #item="{ data }">
+          <template #item="{ data: item }">
             <div class="p-2">
-              <BaseCommonImage :src="data.fullUrl" width="100%" height="300px" class="rounded" :alt="data.baseName" />
+              <BaseCommonImage :src="item.fullUrl" width="100%" height="300px" class="rounded" :alt="item.baseName" />
             </div>
           </template>
         </Carousel>
@@ -23,7 +23,7 @@
       <section class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-4">
         <div class="lg:col-span-1">
           <Card>
-            <template #title>{{ $t('common.aboutUs') }}</template>
+            <template #title>{{ $t('public.bookingProvider.about.title') }}</template>
             <template #content>
               {{ data?.bookingProvider?.aboutUs }}
             </template>
@@ -33,8 +33,8 @@
           <div class="flex flex-col gap-4">
             <BookingProviderRequestBookingPanel :services="services" :blocked-weekdays="blockedWeekdays" />
             <BaseBookingProviderContactsPanel :email="data?.bookingProvider?.email" :phone="data?.bookingProvider?.phone" :website="data?.bookingProvider?.website">
-              <template #title>{{ $t('pages.bookingProvidersShow.contactsTitle') }}</template>
-              <template #subtitle>{{ $t('pages.bookingProvidersShow.contactsDescription') }}</template>
+              <template #title>{{ $t('public.bookingProvider.contacts.title') }}</template>
+              <template #subtitle>{{ $t('public.bookingProvider.contacts.description') }}</template>
             </BaseBookingProviderContactsPanel>
           </div>
         </div>
@@ -48,6 +48,7 @@ import _ from 'lodash';
 import * as yup from 'yup';
 import { GET_BOOKING_PROVIDER } from '~/graphql/booking-provider-page';
 import { graphql } from '~/utils/graphql';
+import type { Media } from '~/utils/graphql/graphql';
 
 definePageMeta({
   layout: 'default',

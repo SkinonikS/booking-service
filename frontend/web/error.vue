@@ -10,12 +10,12 @@
 {{ stackTrace }}
         </pre>
         <div class="flex flex-row justify-center gap-2">
-          <Button v-wave :loading="loading" :label="$t('common.goBack')" @click="goBack">
+          <Button v-wave :loading="loading" :label="$t('actions.goBack')" @click="goBack">
             <template #icon>
               <Icon name="mdi:arrow-left" />
             </template>
           </Button>
-          <Button v-wave text :loading="loading" :label="$t('common.goHome')" @click="goHomepage">
+          <Button v-wave text :loading="loading" :label="$t('actions.goHome')" @click="goHomepage">
             <template #icon>
               <Icon name="mdi:home" />
             </template>
@@ -47,8 +47,8 @@ const errorData = computed<ErrorData>(() => {
   const errorCode = props.error?.statusCode || 500;
 
   return {
-    title: `error.${errorCode}.title`,
-    description: `error.${errorCode}.description`,
+    title: `errors.${errorCode}.title`,
+    description: `errors.${errorCode}.description`,
     code: errorCode.toString(),
   };
 });

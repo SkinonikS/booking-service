@@ -2,38 +2,38 @@
   <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>{{ $t('pages.meBookings.title') }}</template>
-        <template #subtitle>{{ $t('pages.meBookings.description') }}</template>
+        <template #title>{{ $t('public.userBookings.title') }}</template>
+        <template #subtitle>{{ $t('public.userBookings.description') }}</template>
         <template #content>
-          <DataTable :value="me?.bookings ?? []" :loading="status === 'pending' || loading">
-            <Column field="bookingProvider" :header="$t('common.bookingProvider')">
+          <DataTable :value="data?.me?.bookings ?? []" :loading="status === 'pending' || loading">
+            <Column field="bookingProvider" :header="$t('labels.bookingProvider')">
               <template #body="{ data: item }">
                 <span>{{ item.serviceSchedule.weekdaySchedule.bookingProvider.name }}</span>
               </template>
             </Column>
-            <Column field="service" :header="$t('common.service')">
+            <Column field="service" :header="$t('labels.service')">
               <template #body="{ data: item }">
                 <span>{{ item.serviceSchedule.service.name }}</span>
               </template>
             </Column>
-            <Column field="date" :header="$t('common.date')">
+            <Column field="date" :header="$t('labels.date')">
               <template #body="{ data: item }">
                 <span>{{ item.date }}</span>
               </template>
             </Column>
-            <Column field="time" :header="$t('common.time')">
+            <Column field="time" :header="$t('labels.time')">
               <template #body="{ data: item }">
                 <span>{{ convertMinutesForHumans(item.timeSlot) }}</span>
               </template>
             </Column>
-            <Column field="status" :header="$t('common.status')">
+            <Column field="status" :header="$t('labels.status')">
               <template #body="{ data: item }">
                 <BaseBookingProviderStatusBadge :booking-date="item.date" :cancellation-reason="item.cancellationReason" :cancelled-at="item.cancelledAt" />
               </template>
             </Column>
             <Column field="actions" body-style="text-align: right">
               <template #body="{ data: item }">
-                <Button v-tooltip.top="$t('common.cancelBooking')" v-wave :disabled="item.cancelledAt" severity="danger" text rounded @click="cancelBooking(item)">
+                <Button v-tooltip.top="$t('actions.cancelBooking')" v-wave :disabled="item.cancelledAt" severity="danger" text rounded @click="cancelBooking(item)">
                   <template #icon>
                     <Icon name="mdi:close" />
                   </template>
@@ -41,7 +41,7 @@
               </template>
             </Column>
             <template #empty>
-              <div class="text-center">No booking history found.</div>
+              <div class="text-center">{{ $t('public.userBookings.noResults.title') }}</div>
             </template>
           </DataTable>
         </template>
@@ -51,8 +51,8 @@
 </template>
 
 <script setup lang="ts">
-import { graphql } from '~/utils/graphql';
 import { GET_MY_BOOKINGS, CANCEL_BOOKING } from '~/graphql/me-bookings-page';
+import { graphql } from '~/utils/graphql';
 import type { Booking } from '~/utils/graphql/graphql';
 
 definePageMeta({

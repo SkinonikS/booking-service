@@ -1,35 +1,35 @@
 <template>
   <BasePageContainer>
     <Card>
-      <template #title>{{ $t('management.pages.weekdaySchedules.title') }}</template>
-      <template #subtitle>{{ $t('management.pages.weekdaySchedules.description') }}</template>
+      <template #title>{{ $t('management.schedules.weekday.title') }}</template>
+      <template #subtitle>{{ $t('management.schedules.weekday.description') }}</template>
       <template #content>
         <DataTable :value="data?.bookingProvider?.weekdaySchedules ?? []" :loading="status === 'pending'">
-          <Column name="weekday" :header="$t('common.weekday')">
+          <Column name="weekday" :header="$t('labels.weekday')">
             <template #body="{ data: item }">
               <span>{{ $t(`weekdays.${item.weekday}`) }}</span>
             </template>
           </Column>
-          <Column name="openTime" :header="$t('common.openTime')">
+          <Column name="openTime" :header="$t('labels.openTime')">
             <template #body="{ data: item }">
               <span>{{ convertMinutesForHumans(item.openTime) }}</span>
             </template>
           </Column>
-          <Column name="closeTime" :header="$t('common.closeTime')">
+          <Column name="closeTime" :header="$t('labels.closeTime')">
             <template #body="{ data: item }">
               <span>{{ convertMinutesForHumans(item.closeTime) }}</span>
             </template>
           </Column>
-          <Column name="status" :header="$t('common.status')">
+          <Column name="status" :header="$t('labels.status')">
             <template #body="{ data: item }">
               <Badge :severity="item.isActive ? 'success' : 'danger'">
-                {{ item.isActive ? $t('common.active') : $t('common.inactive') }}
+                {{ item.isActive ? $t('statuses.active') : $t('statuses.inactive') }}
               </Badge>
             </template>
           </Column>
           <Column name="actions" body-style="text-align: right">
             <template #body="{ data: item }">
-              <Button v-wave v-tooltip.top="$t('common.edit')" text rounded @click="viewWeekdaySchedule(item.id)">
+              <Button v-wave v-tooltip.top="$t('actions.edit')" text rounded @click="viewWeekdaySchedule(item.id)">
                 <template #icon>
                   <Icon name="mdi:pencil" />
                 </template>
@@ -43,13 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import { graphql } from '~/utils/graphql';
-import { GET_WEEKDAYS_SCHEDULES } from '~/graphql/management/weekday-schedules/index-page';
 import * as yup from 'yup';
+import { GET_WEEKDAYS_SCHEDULES } from '~/graphql/management/weekday-schedules/index-page';
+import { graphql } from '~/utils/graphql';
 import { convertMinutesForHumans } from '~/utils/time';
 
 definePageMeta({
   layout: 'management',
+  middleware: ['is-verified'],
   validate: (route) => yup.object({
     bookingProviderId: yup.string().uuid(),
   }).isValid(route.params),

@@ -34,8 +34,8 @@
         </BaseCommonImage>
       </div>
       <div v-else class="flex flex-col items-center justify-center p-4">
-        <p>{{ $t('management.pages.settingsGeneralGalleryImage.noCoverImage') }}</p>
-        <p>{{ $t('management.pages.settingsGeneralGalleryImage.clickToUpload') }}</p>
+        <p>{{ $t('management.settings.media.gallery.noResults.title') }}</p>
+        <p>{{ $t('management.settings.media.gallery.noResults.description') }}</p>
       </div>
     </template>
   </Card>
@@ -50,7 +50,11 @@ import type { Media } from '~/utils/graphql/graphql';
 
 export interface Props {
   maxImages: number;
-  images?: Media[];
+  images?: {
+    id: string;
+    fullUrl: string;
+    baseName: string;
+  }[];
 }
 
 export interface Emits {

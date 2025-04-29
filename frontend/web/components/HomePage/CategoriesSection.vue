@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold mb-8 text-center">{{ $t('common.categories') }}</h2>
+    <h2 class="text-3xl font-bold mb-8 text-center">{{ $t('public.homepage.categories') }}</h2>
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
       <BaseCategoryPanel v-for="category in data?.randomCategories ?? []" :label="category.name" class="col-span-1" @click="filterByCategory(category.id)" />
     </div>

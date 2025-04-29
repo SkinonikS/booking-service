@@ -1,8 +1,13 @@
 <template>
   <div class="flex flex-col gap-4">
-    <Paginator v-if="props.visiblePaginators" v-model:first="offset" :class="paginatorClasses" :total-records="total" :rows="perPage" always-show />
-    <slot name="content"/>
-    <Paginator v-if="props.visiblePaginators" v-model:first="offset" :class="paginatorClasses" :total-records="total" :rows="perPage" always-show />
+    <template v-if="props.items.length > 0">
+      <Paginator v-if="props.visiblePaginators" v-model:first="offset" :class="paginatorClasses" :total-records="total" :rows="perPage" always-show />
+      <slot name="content" :items="props.items" />
+      <Paginator v-if="props.visiblePaginators" v-model:first="offset" :class="paginatorClasses" :total-records="total" :rows="perPage" always-show />
+    </template>
+    <template v-else>
+      <slot name="empty" />
+    </template>
   </div>
 </template>
 
@@ -12,6 +17,7 @@ export interface Props {
   visiblePaginators?: boolean;
   total: number;
   perPage: number;
+  items?: unknown[];
 }
 
 const offset = defineModel<number>('offset', {
@@ -21,6 +27,7 @@ const offset = defineModel<number>('offset', {
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   visiblePaginators: false,
+  items: () => [],
 });
 
 const paginatorClasses = computed(() => ({

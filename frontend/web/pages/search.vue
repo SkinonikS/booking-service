@@ -7,11 +7,11 @@
         </div>
       </div>
       <div class="col-span-1">
-        <BaseCommonPaginationContainer v-if="data?.bookingProviders" v-model:offset="offset" :per-page="perPage" :total="total" :disabled="status === 'pending'" :visible-paginators="total > 0">
-          <template #content>
+        <BaseCommonPaginationContainer v-model:offset="offset" :items="data?.bookingProviders?.data ??[]" :per-page="perPage" :total="total" :disabled="status === 'pending'" :visible-paginators="total > 0">
+          <template #content="{ items }">
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
               <BaseBookingProviderPanel
-                v-for="bookingProvider in data?.bookingProviders?.data"
+                v-for="bookingProvider in (items as BookingProvider[])"
                 class="col-span-1"
                 :title="bookingProvider.name"
                 :address="bookingProvider.address"
@@ -21,8 +21,10 @@
               />
             </div>
           </template>
+          <template #empty>
+            <SearchEmpty />
+          </template>
         </BaseCommonPaginationContainer>
-        <SearchEmpty v-else />
       </div>
     </div>
   </BasePageContainer>
@@ -31,6 +33,7 @@
 <script lang="ts" setup>
 import { GET_BOOKING_PROVIDERS } from '~/graphql/search-page';
 import { graphql } from '~/utils/graphql';
+import type { BookingProvider } from '~/utils/graphql/graphql';
 
 useSeoMeta({
   title: 'Catalog',
@@ -46,7 +49,7 @@ const { perPage, total, offset, getCurrentPage } = useOffsetPaginator({
 const { $graphql } = useNuxtApp();
 const localeRoute = useLocaleRoute();
 const loadingIndicator = useLoadingIndicator();
-const searchStore = storeToRefs(useSearchStore());
+const searchStore = useSearchStore();
 
 const { data, status, refresh } = await useAsyncData(async () => {
   loadingIndicator.start();
@@ -54,16 +57,16 @@ const { data, status, refresh } = await useAsyncData(async () => {
   const response = await $graphql.default.request(graphql(/* GraphQL */ GET_BOOKING_PROVIDERS), {
     first: perPage.value,
     page: getCurrentPage(),
-    address: searchStore.address.value,
-    date: searchStore.date.value?.toISOString(),
-    categories: searchStore.categories.value,
+    address: searchStore.address,
+    date: searchStore.date?.toISOString(),
+    categories: searchStore.categories,
   });
 
   loadingIndicator.finish();
 
   return response;
 }, {
-  watch: [offset],
+  watch: [offset, searchStore],
 });
 
 watch(data, () => {

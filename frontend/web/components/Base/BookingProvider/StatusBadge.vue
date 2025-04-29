@@ -3,15 +3,15 @@
     v-if="isCancelled"
     v-tooltip.top="props.cancellationReason"
     severity="danger"
-  >{{ $t('common.cancelled') }}</Badge>
+  >{{ $t('statuses.cancelled') }}</Badge>
   <Badge
     v-else-if="isUpcoming"
     severity="info"
-  >{{ $t('common.upcoming') }}</Badge>
+  >{{ $t('statuses.upcoming') }}</Badge>
   <Badge
     v-else-if="isPast"
     severity="warning"
-  >{{ $t('common.past') }}</Badge>
+  >{{ $t('statuses.past') }}</Badge>
 </template>
 
 <script setup lang="ts">

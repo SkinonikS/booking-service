@@ -1,36 +1,31 @@
 <template>
   <DataTable :value="data?.weekdaySchedule?.serviceSchedules ?? []" :loading="status === 'pending'">
-    <template #empty>
-      <div class="flex flex-col items-center">
-        <span>{{ $t('common.noServicesFound') }}</span>
-      </div>
-    </template>
-    <Column field="name" :header="$t('common.name')">
+    <Column field="name" :header="$t('labels.name')">
       <template #body="{ data: item }">
         <span>{{ item.service.name }}</span>
       </template>
     </Column>
-    <Column field="openTime" :header="$t('common.openTime')">
+    <Column field="openTime" :header="$t('labels.openTime')">
       <template #body="{ data: item }">
         <span>{{ convertMinutesForHumans(item.openTime) }}</span>
       </template>
     </Column>
-    <Column field="closeTime" :header="$t('common.closeTime')">
+    <Column field="closeTime" :header="$t('labels.closeTime')">
       <template #body="{ data: item }">
         <span>{{ convertMinutesForHumans(item.closeTime) }}</span>
       </template>
     </Column>
-    <Column name="status" :header="$t('common.status')">
+    <Column name="status" :header="$t('labels.status')">
       <template #body="{ data: item }">
         <Badge :severity="item.isActive ? 'success' : 'danger'">
-          {{ item.isActive ? $t('common.active') : $t('common.inactive') }}
+          {{ item.isActive ? $t('statuses.active') : $t('statuses.inactive') }}
         </Badge>
       </template>
     </Column>
     <Column field="actions">
       <template #body="{ data: item }">
         <div class="flex flex-row-reverse gap-2">
-          <Button v-tooltip.top="$t('common.edit')" v-wave text rounded @click="editServiceSchedule(item.id)">
+          <Button v-tooltip.top="$t('actions.edit')" v-wave text rounded @click="editServiceSchedule(item.id)">
             <template #icon>
               <Icon name="mdi:pencil" />
             </template>
@@ -38,6 +33,11 @@
         </div>
       </template>
     </Column>
+    <template #empty>
+      <div class="flex flex-col items-center">
+        <span>{{ $t('management.schedules.services.noResults.title') }}</span>
+      </div>
+    </template>
   </DataTable>
 </template>
 

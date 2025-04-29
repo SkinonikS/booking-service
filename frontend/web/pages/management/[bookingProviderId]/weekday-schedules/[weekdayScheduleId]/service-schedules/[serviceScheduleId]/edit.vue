@@ -2,8 +2,8 @@
   <BasePageContainer>
     <div class="flex flex-col gap-4">
       <Card>
-        <template #title>{{ $t('management.pages.serviceSchedultEdit.title') }}</template>
-        <template #subtitle>{{ $t('management.pages.serviceSchedultEdit.description') }}</template>
+        <template #title>{{ $t('management.schedules.edit.title') }}</template>
+        <template #subtitle>{{ $t('management.schedules.edit.description') }}</template>
         <template #content>
           <ServiceScheduleEditForm ref="formRef" :disabled="status === 'pending' || loading" @submit="editServiceSchedule" />
         </template>
@@ -11,7 +11,7 @@
           <BaseFormControls :disabled="meta.dirty || status === 'pending' || loading" @reset="handleReset()" @submit="formRef?.requestSubmit()">
             <template #before>
               <div class="grow" />
-              <Button v-wave text :loading="status === 'pending' || loading" :label="$t('common.delete')" severity="danger" @click="deleteServiceSchedule()">
+              <Button v-wave text :loading="status === 'pending' || loading" :label="$t('actions.delete')" severity="danger" @click="deleteServiceSchedule()">
                 <template #icon>
                   <Icon name="mdi:delete" />
                 </template>
@@ -31,6 +31,7 @@ import { graphql } from '~/utils/graphql';
 
 definePageMeta({
   layout: 'management',
+  middleware: ['is-verified'],
   validate: (route) => yup.object({
     serviceScheduleId: yup.string().required().uuid(),
     bookingProviderId: yup.string().required().uuid(),
@@ -141,5 +142,5 @@ const redirectBack = async () => {
   });
 
   await navigateTo(localeRoutePath ?? '/');
-}
+};
 </script>
