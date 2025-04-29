@@ -9,7 +9,7 @@
 <script setup lang="ts">
 const { appName } = useAppConfig();
 
-useHead({
+useSeoMeta({
   titleTemplate: (titleChunk) => {
     return titleChunk ? `${titleChunk} - ${appName}` : appName;
   },

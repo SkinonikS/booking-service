@@ -84,41 +84,6 @@ export default defineNuxtConfig({
       clientsClaim: true,
       cleanupOutdatedCaches: true,
       skipWaiting: true,
-      // runtimeCaching: [
-      //   {
-      //     urlPattern: ({ request, url }) => {
-      //       if (url.pathname.startsWith('/auth/')) {
-      //         return false;
-      //       }
-
-      //       return request.mode === 'navigate';
-      //     },
-      //     handler: 'NetworkFirst',
-      //     options: {
-      //       cacheName: 'pages-cache',
-      //       networkTimeoutSeconds: 3,
-      //       cacheableResponse: {
-      //         statuses: [0, 200],
-      //       },
-      //     },
-      //   },
-      //   {
-      //     urlPattern: ({ url }) => {
-      //       return url.pathname === '/api/_nuxt_icon/mdi.json';
-      //     },
-      //     handler: 'CacheFirst',
-      //     options: {
-      //       cacheName: 'nuxt-icons-cache',
-      //       expiration: {
-      //         maxEntries: 200,
-      //         maxAgeSeconds: 60 * 60 * 24 * 30,
-      //       },
-      //       cacheableResponse: {
-      //         statuses: [0, 200],
-      //       },
-      //     },
-      //   },
-      // ],
     },
     client: {
       installPrompt: true,
