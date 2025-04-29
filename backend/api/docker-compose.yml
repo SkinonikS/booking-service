@@ -27,6 +27,19 @@ services:
             - typesense
             - mailpit
             - soketi
+    pgadmin:
+        image: 'dpage/pgadmin4:latest'
+        ports:
+            - "${FORWARD_PGADMIN_PORT:-8888}:80"
+        volumes:
+            - 'sail-pgadmin:/var/lib/pgadmin'
+        environment:
+            PGADMIN_DEFAULT_EMAIL: 'sail@example.com'
+            PGADMIN_DEFAULT_PASSWORD: 'password'
+            MASTER_PASSWORD_REQUIRED: 'False'
+            SERVER_MODE: 'False'
+        networks:
+            - sail
     pgsql:
         image: 'postgres:17'
         ports:
@@ -117,4 +130,6 @@ volumes:
     sail-redis:
         driver: local
     sail-typesense:
+        driver: local
+    sail-pgadmin:
         driver: local
