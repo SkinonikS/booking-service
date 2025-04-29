@@ -21,6 +21,10 @@ class BookingProviders
             });
         }
 
+        if (! empty($args['address'])) {
+            $query->where('address', 'LIKE', '%'.$args['address'].'%');
+        }
+
         if (! empty($args['date'])) {
             $date = $args['date'] instanceof DateTimeInterface
                 ? $args['date']
@@ -28,16 +32,14 @@ class BookingProviders
 
             $weekday = $date->dayOfWeek;
 
-            // Filter booking providers that have weekday schedules for this day
             $query->whereHas('weekdaySchedules', function (EloquentBuilder $query) use ($weekday, $date) {
                 $query
                     ->where('weekday_id', $weekday)
                     ->where('is_active', true)
-                      // Only include providers with active schedules
                     ->whereHas('serviceSchedules', function (EloquentBuilder $query) use ($date) {
                         $query
                             ->where('is_active', true)
-                              // Check if the service schedule is not fully booked for this date
+
                             ->whereRaw('
                                     (SELECT COUNT(*)
                                      FROM bookings
