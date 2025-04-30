@@ -18,11 +18,13 @@ const { handleReset, handleSubmit } = useForm({
     categories: searchStore.categories,
     date: searchStore.date,
     address: searchStore.address,
+    name: searchStore.name,
   },
   validationSchema: toTypedSchema(yup.object({
     categories: yup.array().of(yup.string().uuid()).nullable(),
     date: yup.date().nullable(),
     address: yup.string().nullable(),
+    name: yup.string().nullable(),
   })),
 });
 
@@ -32,8 +34,9 @@ const reset = () => {
 };
 
 const submitForm = handleSubmit(async (values) => {
-  searchStore.categories = values.categories;
+  searchStore.categories = values.categories as string[] | null | undefined;
   searchStore.date = values.date;
   searchStore.address = values.address;
+  searchStore.name = values.name;
 });
 </script>

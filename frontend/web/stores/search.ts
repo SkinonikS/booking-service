@@ -2,6 +2,7 @@ export interface SearchStore {
   categories: string[] | null | undefined;
   date: Date | null | undefined;
   address: string | null | undefined;
+  name: string | null | undefined;
 }
 
 export const useSearchStore = defineStore('search', {
@@ -9,9 +10,11 @@ export const useSearchStore = defineStore('search', {
     categories: [],
     date: null,
     address: null,
+    name: null,
   }),
   actions: {
     clear() {
+      this.name = null;
       this.categories = [];
       this.date = null;
       this.address = null;

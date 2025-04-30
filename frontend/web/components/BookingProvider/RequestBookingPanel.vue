@@ -130,7 +130,7 @@ const timeSlots = computed(() => {
     const endTime = Math.min(timeSlot + timeInfo.serviceSchedule.timeSpan, timeInfo.serviceSchedule.closeTime);
 
     timeSlots.push({
-      label: `${convertMinutesForHumans(timeSlot)} - ${convertMinutesForHumans(endTime)}`,
+      label: `${getFormattedTimeRange(timeSlot, endTime)} (${currentBookings}/${timeInfo.serviceSchedule.maxBookings})`,
       value: timeSlot,
       disabled: currentBookings >= timeInfo.serviceSchedule.maxBookings,
     });

@@ -8,8 +8,8 @@ export const GET_FILTER_DATA = /* GraphQL */ `
 `;
 
 export const GET_BOOKING_PROVIDERS = /* GraphQL */ `
-  query GetBookingProviders($categories: [ID!], $date: Date, $address: String, $page: Int, $first: Int) {
-    bookingProviders(categories: $categories, date: $date, address: $address, page: $page, first: $first) {
+  query GetBookingProviders($categories: [ID!], $date: Date, $address: String, $name: String, $page: Int, $first: Int) {
+    bookingProviders(categories: $categories, date: $date, address: $address, name: $name, page: $page, first: $first) {
       data {
         id
         name

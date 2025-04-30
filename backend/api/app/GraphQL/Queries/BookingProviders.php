@@ -21,6 +21,10 @@ class BookingProviders
             });
         }
 
+        if (! empty($args['name'])) {
+            $query->where('name', 'LIKE', '%'.$args['name'].'%');
+        }
+
         if (! empty($args['address'])) {
             $query->where('address', 'LIKE', '%'.$args['address'].'%');
         }

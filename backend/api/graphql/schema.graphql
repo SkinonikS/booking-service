@@ -175,6 +175,7 @@ type Query {
   bookingProviders(
     categories: [ID!]
     address: String
+    name: String
     date: Date @rules(apply: ["date", "after_or_equal:today"])
   ): [BookingProvider!]! @paginate(defaultCount: 10, builder: "App\\GraphQL\\Queries\\BookingProviders")
 

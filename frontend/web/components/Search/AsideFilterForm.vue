@@ -1,5 +1,6 @@
 <template>
   <form ref="formRef" class="flex flex-col gap-2" novalidate @submit="(e) => emit('submit', e)">
+    <BaseFormTextInput name="name" :label="$t('labels.name')" :loading="status === 'pending'" :disabled="props.disabled" class="col-span-1" />
     <BaseFormMultiSelectInput :options="categories" name="categories" :label="$t('labels.categories')" :loading="status === 'pending'" :disabled="props.disabled" class="col-span-1" />
     <BaseFormDatepickerInput name="date" :label="$t('labels.date')" :loading="status === 'pending'" :disabled="props.disabled" class="col-span-1" />
     <BaseFormTextInput name="address" :label="$t('labels.address')" :loading="status === 'pending'" :disabled="props.disabled" class="col-span-1" />

@@ -60,6 +60,7 @@ const { data, status, refresh } = await useAsyncData(async () => {
     address: searchStore.address,
     date: searchStore.date?.toISOString(),
     categories: searchStore.categories,
+    name: searchStore.name,
   });
 
   loadingIndicator.finish();
