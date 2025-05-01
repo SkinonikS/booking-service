@@ -3,7 +3,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4">
       <div class="col-span-1">
         <div class="md:sticky md:top-4">
-          <SearchAsideFilter @submit="refresh()" />
+          <SearchAsideFilter :loading="status === 'pending'" @submit="refresh()" />
         </div>
       </div>
       <div class="col-span-1">

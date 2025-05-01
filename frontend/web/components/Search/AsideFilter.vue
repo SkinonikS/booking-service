@@ -1,7 +1,7 @@
 <template>
-  <BaseSearchAsideFilter @reset="reset()" @search="formRef?.requestSubmit()">
+  <BaseSearchAsideFilter :loading="props.loading" :disabled="! meta.dirty" @reset="reset()" @search="formRef?.requestSubmit()">
     <template #form>
-      <SearchAsideFilterForm ref="formRef" @submit="submitForm" />
+      <SearchAsideFilterForm ref="formRef" :disabled="props.loading" @submit="submitForm" />
     </template>
   </BaseSearchAsideFilter>
 </template>
@@ -11,10 +11,18 @@ import _ from 'lodash';
 import { DateTime } from 'luxon';
 import * as yup from 'yup';
 
+export interface Props {
+  loading?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  loading: false,
+});
+
 const formRef = useTemplateRef('formRef');
 
 const searchStore = useSearchStore();
-const { handleSubmit, resetForm } = useForm({
+const { handleSubmit, resetForm, meta } = useForm({
   initialValues: {
     categories: searchStore.categories,
     date: searchStore.date,

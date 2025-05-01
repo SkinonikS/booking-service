@@ -14,12 +14,12 @@
       </template>
       <template #footer>
         <div class="flex flex-row gap-2">
-          <Button v-wave class="grow" :label="$t('actions.search')" @click="emit('search')">
+          <Button v-wave class="grow" :label="$t('actions.search')" :disabled="props.disabled" :loading="props.loading" @click="emit('search')">
             <template #icon>
               <Icon name="mdi:filter" />
             </template>
           </Button>
-          <Button v-wave v-tooltip.top="$t('actions.resetFilter')" severity="danger" @click="emit('reset')">
+          <Button v-wave v-tooltip.top="$t('actions.resetFilter')" severity="danger" :disabled="props.disabled" :loading="props.loading" @click="emit('reset')">
             <template #icon>
               <Icon name="mdi:filter-off" />
             </template>
@@ -31,10 +31,19 @@
 </template>
 
 <script setup lang="ts">
+export interface Props {
+  disabled?: boolean;
+  loading?: boolean;
+}
+
 export interface Emit {
   search: [];
   reset: [];
 }
 
 const emit = defineEmits<Emit>();
+const props = withDefaults(defineProps<Props>(), {
+  disabled: false,
+  loading: false,
+});
 </script>
