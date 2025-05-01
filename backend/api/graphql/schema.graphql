@@ -227,7 +227,7 @@ type User {
   createdAt: DateTimeUtc! @rename(attribute: "created_at")
   updatedAt: DateTimeUtc! @rename(attribute: "updated_at")
   bookingProviders: [BookingProvider!]! @hasMany(relation: "bookingProviders")
-  bookings: [Booking!]! @hasMany(relation: "bookings")
+  bookings: [Booking!]! @hasMany(relation: "bookings") @builder(method: "App\\GraphQL\\Queries\\UserBookings")
 }
 
 type WeekdaySchedule {
