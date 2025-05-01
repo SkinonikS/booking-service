@@ -1,6 +1,8 @@
+import type { DateTime } from 'luxon';
+
 export interface SearchStore {
   categories: string[] | null | undefined;
-  date: Date | null | undefined;
+  date: DateTime | null | undefined;
   address: string | null | undefined;
   name: string | null | undefined;
 }

@@ -36,8 +36,7 @@ import { graphql } from '~/utils/graphql';
 import type { BookingProvider } from '~/utils/graphql/graphql';
 
 useSeoMeta({
-  title: 'Catalog',
-  description: 'Find and Book Amazing Experiences. Explore our features and services.',
+  title: 'Search',
 });
 
 const { perPage, total, offset, getCurrentPage } = useOffsetPaginator({
@@ -58,7 +57,7 @@ const { data, status, refresh } = await useAsyncData(async () => {
     first: perPage.value,
     page: getCurrentPage(),
     address: searchStore.address,
-    date: searchStore.date?.toISOString(),
+    date: searchStore.date?.toISODate(),
     categories: searchStore.categories,
     name: searchStore.name,
   });

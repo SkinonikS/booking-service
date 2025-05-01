@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 import _ from 'lodash';
+import { DateTime } from 'luxon';
 import * as yup from 'yup';
 
 const formRef = useTemplateRef('formRef');
@@ -22,7 +23,7 @@ const { handleReset, handleSubmit } = useForm({
   },
   validationSchema: toTypedSchema(yup.object({
     categories: yup.array().of(yup.string().uuid()).nullable(),
-    date: yup.date().nullable(),
+    date: yup.mixed().test('is-date', 'Invalid date', (value) => value instanceof DateTime).nullable(),
     address: yup.string().nullable(),
     name: yup.string().nullable(),
   })),
@@ -35,7 +36,7 @@ const reset = () => {
 
 const submitForm = handleSubmit(async (values) => {
   searchStore.categories = values.categories as string[] | null | undefined;
-  searchStore.date = values.date;
+  searchStore.date = values.date as DateTime | null | undefined;
   searchStore.address = values.address;
   searchStore.name = values.name;
 });

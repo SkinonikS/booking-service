@@ -33,12 +33,17 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { $graphql } = useNuxtApp();
 
-const { data, status } = await useAsyncData(() => {
+const { data, status, execute } = await useAsyncData(() => {
   return $graphql.default.request(graphql(/* GraphQL */ GET_FILTER_DATA));
 }, {
   server: false,
   lazy: true,
+  immediate: false,
 });
+
+// For some reason, if using server=false, the data is not matched on client with the server.
+// But using onMounted fixes the issue. Maybe it's a bug in Nuxt 3?
+onMounted(() => execute());
 
 const categories = computed(() => {
   if (! data.value) {

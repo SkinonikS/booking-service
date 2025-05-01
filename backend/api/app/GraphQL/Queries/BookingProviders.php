@@ -43,21 +43,19 @@ class BookingProviders
                     ->whereHas('serviceSchedules', function (EloquentBuilder $query) use ($date) {
                         $query
                             ->where('is_active', true)
-
                             ->whereRaw('
-                                    (SELECT COUNT(*)
-                                     FROM bookings
-                                     WHERE bookings.service_schedule_id = service_schedules.id
-                                     AND bookings.date = ?
-                                     AND bookings.cancelled_at IS NULL
-                                     GROUP BY bookings.time_slot) < service_schedules.max_bookings
-                                     OR NOT EXISTS (
-                                        SELECT 1
-                                        FROM bookings
-                                        WHERE bookings.service_schedule_id = service_schedules.id
-                                        AND bookings.date = ?
-                                     )
-                                ', [$date->format('Y-m-d'), $date->format('Y-m-d')]);
+                                (SELECT COUNT(*)
+                                    FROM bookings
+                                    WHERE bookings.service_schedule_id = service_schedules.id
+                                    AND bookings.date = ?
+                                    AND bookings.cancelled_at IS NULL
+                                    GROUP BY bookings.time_slot) < service_schedules.max_bookings
+                                    OR NOT EXISTS (
+                                    SELECT 1
+                                    FROM bookings
+                                    WHERE bookings.service_schedule_id = service_schedules.id
+                                    AND bookings.date = ?)
+                            ', [$date->format('Y-m-d'), $date->format('Y-m-d')]);
                     });
             });
         }

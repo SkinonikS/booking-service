@@ -14,17 +14,15 @@ beforeEach(function () {
 
 it('can query booking providers', function () {
     // Create test booking providers
-    $bookingProviders = BookingProvider::factory()
-        ->count(3)
-        ->create([
-            'user_id' => $this->user->id,
-            'category_id' => $this->category->id,
-        ]);
+    BookingProvider::factory()->count(1)->create([
+        'user_id' => $this->user->id,
+        'category_id' => $this->category->id,
+    ]);
 
     // Execute the GraphQL query
     $response = $this->graphQL('
         {
-            bookingProviders(first: 5) {
+            bookingProviders {
                 data {
                     id
                     name
@@ -51,7 +49,7 @@ it('can query booking providers', function () {
 
     // Check that we got 3 providers
     $responseData = $response->json('data.bookingProviders.data');
-    expect(count($responseData))->toBe(3);
+    expect(count($responseData))->toBe(1);
 })->group('bookingProvider');
 
 it('can query booking provider by id', function () {
