@@ -32,8 +32,10 @@ class CancelBooking
          */
         $user = Auth::user();
 
-        if (! $user->can('cancel', $booking) || ! $user->can('update', $bookingProvider)) {
-            throw new NotFoundHttpException;
+        if (! $user->can('cancel', $booking)) {
+            if (! $user->can('update', $bookingProvider)) {
+                throw new NotFoundHttpException('Booking not found.');
+            }
         }
 
         if ($booking->canceled_at) {
