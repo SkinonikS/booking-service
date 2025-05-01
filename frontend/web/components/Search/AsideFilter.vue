@@ -14,7 +14,7 @@ import * as yup from 'yup';
 const formRef = useTemplateRef('formRef');
 
 const searchStore = useSearchStore();
-const { handleReset, handleSubmit } = useForm({
+const { handleSubmit, resetForm } = useForm({
   initialValues: {
     categories: searchStore.categories,
     date: searchStore.date,
@@ -23,14 +23,16 @@ const { handleReset, handleSubmit } = useForm({
   },
   validationSchema: toTypedSchema(yup.object({
     categories: yup.array().of(yup.string().uuid()).nullable(),
-    date: yup.mixed().test('is-date', 'Invalid date', (value) => value instanceof DateTime).nullable(),
+    date: yup.mixed().nullable().test('is-date', 'Invalid date', (value) => {
+      return value && value instanceof DateTime || true;
+    }),
     address: yup.string().nullable(),
     name: yup.string().nullable(),
   })),
 });
 
 const reset = () => {
-  handleReset();
+  resetForm();
   formRef?.value?.requestSubmit();
 };
 
