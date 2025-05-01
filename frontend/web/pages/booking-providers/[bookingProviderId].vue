@@ -48,7 +48,6 @@ import _ from 'lodash';
 import * as yup from 'yup';
 import { GET_BOOKING_PROVIDER } from '~/graphql/booking-provider-page';
 import { graphql } from '~/utils/graphql';
-import type { Media } from '~/utils/graphql/graphql';
 
 definePageMeta({
   layout: 'default',

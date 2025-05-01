@@ -54,12 +54,14 @@ const formRef = useTemplateRef('formRef');
 
 const { meta, handleSubmit, values, resetField } = useForm({
   initialValues: {
-    date: new Date(),
+    date: DateTime.now(), // Updated to use DateTime.now() for current date
   },
   validationSchema: toTypedSchema(yup.object({
     serviceId: yup.string().required().label('Service'),
     serviceScheduleId: yup.string().required().label('Schedule'),
-    date: yup.date().required().label('Date'),
+    date: yup.mixed<DateTime>().test('is-date', 'Invalid Date', (value) => {
+      return value && value instanceof DateTime || true;
+    }).required().label('Date'),
     timeSlot: yup.number().required().label('Time'),
   })),
 });
@@ -71,7 +73,7 @@ const { data, status } = await useAsyncData(() => {
 
   return $graphql.default.request(graphql(/* GraphQL */ GET_DATEPICKER_INFO_FOR_SERVICE), {
     serviceId: values.serviceId,
-    date: DateTime.fromJSDate(values.date).toFormat('yyyy-MM-dd'),
+    date: (values.date as DateTime).toISODate(),
   });
 }, {
   server: false,
@@ -119,6 +121,9 @@ const timeSlots = computed(() => {
     disabled?: boolean;
   }[] = [];
 
+  const isToday = DateTime.fromJSDate(values.date as Date).hasSame(DateTime.now(), 'day');
+  const currentMinutes = isToday ? DateTime.now().hour * 60 + DateTime.now().minute : 0;
+
   while (timeInfo.serviceSchedule.openTime + (i * timeInfo.serviceSchedule.timeSpan) < timeInfo.serviceSchedule.closeTime) {
     const timeSlot = timeInfo.serviceSchedule.openTime + (i * timeInfo.serviceSchedule.timeSpan);
     const bookedTimeSlot = _.find(timeInfo.bookedTimeSlots, (bookedTimeSlot) => bookedTimeSlot.timeSlot === timeSlot);
@@ -129,10 +134,13 @@ const timeSlots = computed(() => {
 
     const endTime = Math.min(timeSlot + timeInfo.serviceSchedule.timeSpan, timeInfo.serviceSchedule.closeTime);
 
+    const isPastTimeSlot = isToday && timeSlot <= currentMinutes;
+    const isFullyBooked = currentBookings >= timeInfo.serviceSchedule.maxBookings;
+
     timeSlots.push({
       label: `${getFormattedTimeRange(timeSlot, endTime)} (${currentBookings}/${timeInfo.serviceSchedule.maxBookings})`,
       value: timeSlot,
-      disabled: currentBookings >= timeInfo.serviceSchedule.maxBookings,
+      disabled: isPastTimeSlot || isFullyBooked,
     });
 
     i++;
@@ -147,7 +155,7 @@ const submitForm = handleSubmit(async (values) => {
   try {
     await $graphql.default.request(graphql(/* GraphQL */ REQUEST_BOOKING), {
       serviceScheduleId: values.serviceScheduleId,
-      date: DateTime.fromJSDate(values.date).toFormat('yyyy-MM-dd'),
+      date: values.date.toISODate(),
       timeSlot: values.timeSlot,
     });
 

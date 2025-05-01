@@ -42,13 +42,17 @@ const { value, errorMessage } = useField<DateTime | null | undefined>(() => prop
 
 const jsDate = computed(() => {
   if (value.value) {
-    return value.value.toJSDate();
+    if (value.value instanceof DateTime) {
+      return value.value.toJSDate();
+    }
+
+    return value.value;
   }
 
   return null;
 });
 
-const onModelValue = (date: Date) => {
+const onModelValue = (date: Date | undefined | null) => {
   if (date) {
     value.value = DateTime.fromJSDate(date);
   } else {

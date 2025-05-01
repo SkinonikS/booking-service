@@ -28,7 +28,7 @@
             </Column>
             <Column field="status" :header="$t('labels.status')">
               <template #body="{ data: item }">
-                <BaseBookingProviderStatusBadge :booking-date="item.date" :cancellation-reason="item.cancellationReason" :cancelled-at="item.cancelledAt" />
+                <BaseBookingProviderStatusBadge :booking-date="item.date" :time-slot="item.timeSlot" :cancellation-reason="item.cancellationReason" :cancelled-at="item.cancelledAt" />
               </template>
             </Column>
             <Column field="actions" body-style="text-align: right">
@@ -60,7 +60,7 @@ definePageMeta({
 });
 
 useSeoMeta({
-  title: 'My Bookings',
+  title: 'My bookings',
 });
 
 const loading = ref(false);

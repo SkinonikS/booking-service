@@ -19,6 +19,7 @@ import { DateTime } from 'luxon';
 
 export interface Props {
   bookingDate: string | DateTime;
+  timeSlot?: number;
   cancelledAt?: string | DateTime;
   cancellationReason?: string;
 }
@@ -33,15 +34,23 @@ const convertDate = (date: string | DateTime) => {
   return date;
 };
 
+const luxonBookingDate = computed(() => {
+  const date = convertDate(props.bookingDate);
+
+  if (props.timeSlot) {
+    return date.plus({ minutes: props.timeSlot });
+  }
+
+  return date;
+});
+
 const luxonCancelledAt = computed(() => {
   return props.cancelledAt
     ? convertDate(props.cancelledAt)
     : undefined;
 });
 
-const luxonBookingDate = computed(() => convertDate(props.bookingDate));
-
-const isUpcoming = computed(() => luxonBookingDate.value > DateTime.now());
-const isPast = computed(() => luxonBookingDate.value < DateTime.now());
+const isPast = computed(() => DateTime.now() >= luxonBookingDate.value);
+const isUpcoming = computed(() => DateTime.now() <= luxonBookingDate.value);
 const isCancelled = computed(() => !! luxonCancelledAt.value && luxonCancelledAt.value < DateTime.now());
 </script>
