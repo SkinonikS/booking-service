@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property string $date
+ * @property \Illuminate\Support\Carbon $date
  * @property int $time_slot
- * @property string $additional_info
  * @property string $cancellation_reason
  * @property string $user_id
  * @property string $service_schedule_id
@@ -30,7 +29,6 @@ class Booking extends Model
         'user_id',
         'date',
         'time_slot',
-        'additional_info',
         'cancellation_reason',
         'cancelled_at',
     ];

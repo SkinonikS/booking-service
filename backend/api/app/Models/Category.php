@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property string $name
  * @property string $description
+ * @property \Illuminate\Database\Eloquent\Collection<int, \App\Models\BookingProvider> $bookingProviders
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  */

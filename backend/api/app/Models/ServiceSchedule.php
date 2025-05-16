@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $open_time
  * @property int $close_time
  * @property int $time_span
+ * @property bool $is_active
  * @property \App\Models\WeekdaySchedule $weekdaySchedule
  * @property \App\Models\Service $service
  * @property \Illuminate\Support\Carbon $created_at

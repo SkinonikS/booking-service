@@ -16,9 +16,11 @@ use Plank\Mediable\MediableInterface;
  * @property string $email
  * @property string $phone
  * @property string $address
+ * @property string $website
  * @property string $about_us
  * @property string $user_id
  * @property string $category_id
+ * @property string $is_active
  * @property \App\Models\User $user
  * @property \App\Models\Category $category
  * @property \Illuminate\Database\Eloquent\Collection<int, \App\Models\Service> $services
@@ -45,18 +47,16 @@ class BookingProvider extends Model implements MediableInterface
         'website',
     ];
 
-    protected static function booted(): void
+    public function populateWeekdaySchedules(): void
     {
-        // static::created(function (self $self) {
-        //     $weekdaySchedules = collect(WeekDay::cases())->map(fn ($weekday) => [
-        //         'weekday_id' => $weekday->value,
-        //         'open_time' => 480,
-        //         'close_time' => 1080,
-        //         'is_active' => false,
-        //     ]);
+        $weekdaySchedules = collect(WeekDay::cases())->map(fn ($weekday) => [
+            'weekday_id' => $weekday->value,
+            'open_time' => 480,
+            'close_time' => 1080,
+            'is_active' => false,
+        ]);
 
-        //     $self->weekdaySchedules()->createMany($weekdaySchedules);
-        // });
+        $this->weekdaySchedules()->createMany($weekdaySchedules);
     }
 
     public function services(): HasMany

@@ -12,9 +12,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $booking_provider_id
  * @property int $weekday_id
  * @property bool $is_active
+ * @property int $open_time
+ * @property int $close_time
  * @property \Illuminate\Support\Carbon $open_time
  * @property \Illuminate\Support\Carbon $close_time
  * @property \App\Models\BookingProvider $bookingProvider
+ * @property \Illuminate\Database\Eloquent\Collection<int, \App\Models\ServiceSchedule> $serviceSchedules
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
  */
 class WeekdaySchedule extends Model
 {

@@ -15,14 +15,16 @@ use Illuminate\Notifications\Notifiable;
  * @property string $cognito_id
  * @property string $name
  * @property string $email
+ * @property bool $is_verified
+ * @property \Illuminate\Database\Eloquent\Collection<int, \App\Models\BookingProvider> $bookingProviders
+ * @property \Illuminate\Database\Eloquent\Collection<int, \App\Models\Booking> $bookings
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
  */
 class User extends Authenticatable implements HasCognitoInterface
 {
     use HasCognitoTrait;
-
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
-
     use HasUuids;
     use Notifiable;
 
