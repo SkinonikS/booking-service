@@ -14,6 +14,10 @@ class BookingProviderPolicy
             return Response::deny('You must be logged in to create a booking provider.');
         }
 
+        if (! $user->is_verified) {
+            return Response::deny('You must verify your account to create a booking provider.');
+        }
+
         return Response::allow();
     }
 
@@ -21,6 +25,10 @@ class BookingProviderPolicy
     {
         if (! $user) {
             return Response::deny('You must be logged in to view the booking provider.');
+        }
+
+        if (! $user->is_verified) {
+            return Response::deny('You must verify your account to view the booking provider.');
         }
 
         if ($bookingProvider->user_id === $user->getKey()) {
@@ -36,6 +44,10 @@ class BookingProviderPolicy
             return Response::deny('You must be logged in to update the booking provider.');
         }
 
+        if (! $user->is_verified) {
+            return Response::deny('You must verify your account to view the booking provider.');
+        }
+
         if ($bookingProvider->user_id === $user->getKey()) {
             return Response::allow();
         }
@@ -47,6 +59,10 @@ class BookingProviderPolicy
     {
         if (! $user) {
             return Response::deny('You must be logged in to delete the booking provider.');
+        }
+
+        if (! $user->is_verified) {
+            return Response::deny('You must verify your account to view the booking provider.');
         }
 
         if ($bookingProvider->user_id === $user->getKey()) {
